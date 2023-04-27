@@ -1,0 +1,66 @@
+plugins {
+    id 'com.android.application'
+}
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+android {
+    namespace 'com.example.simpleocr'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.yangdai.simpleocr"
+        minSdk 28
+        targetSdk 33
+        versionCode 2
+        versionName "2.0"
+        resourceConfigurations += ["en", "de", "zh"]
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+    def room_version = "2.5.1"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    // optional - RxJava2 support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+
+    // optional - RxJava3 support for Room
+    implementation "androidx.room:room-rxjava3:$room_version"
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation "androidx.room:room-guava:$room_version"
+
+    // optional - Paging 3 Integration
+    implementation "androidx.room:room-paging:$room_version"
+
+    implementation 'cz.adaptech.tesseract4android:tesseract4android-openmp:4.4.0'
+    implementation(platform('org.jetbrains.kotlin:kotlin-bom:1.8.20'))
+
+    implementation 'com.github.yalantis:ucrop:2.2.6-native'
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}

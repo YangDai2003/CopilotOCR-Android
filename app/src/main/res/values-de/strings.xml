@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="photo">Foto</string>
+    <string name="copy">kopieren</string>
+    <string name="ocr">Text:</string>
+    <string name="camera">Kamera</string>
+    <string name="album">Album</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="app_name">Kopilot OCR</string>
+    <string name="copied">kopiert</string>
+    <string name="processing...">Behandeln…</string>
+    <string name="settings">Aufstellung</string>
+    <string name="choose">Wählen die Sprachen:</string>
+    <string name="confirm">Festlegen</string>
+    <string name="message">Tipp: Die Auswahl von weniger Sprachen verbessert die Geschwindigkeit und Genauigkeit.</string>
+    <string name="save">Verwahren</string>
+    <string name="delete">Entfernen</string>
+    <string name="sure">Möchten Sie es wirklich löschen?</string>
+    <string name="edit">Redaktion</string>
+    <string name="about">Über</string>
+    <string name="source">Open Source Lizenzen</string>
+    <string name="content">Funktionen:\n1. Ohne Internet Bild-OCR\n2. Verlauf gescannter Bilder\n3. Bearbeiten, Kopieren von gescanntem Text\n4. Automatischer Wechsel zwischen Hell- und Dunkelmodus je nach Gerät und automatischer Wechsel der Anwendungssprache\n5. Anpassung an Materialdesign3\n6. Unterstützt vereinfachtes Chinesisch, traditionelles Chinesisch, automatische Erkennung von Englisch und Deutsch</string>
+    <string name="close">Schließen</string>
+    <string name="share">Teilen</string>
+    <string name="shareApp">Diese App teilen</string>
+    <string name="ask">Bitte erlauben Sie zuerst die Zugriffsberechtigung!</string>
+    <string name="shareContent">Laden Sie jetzt den Kopilot OCR von Google Play herunter:\nhttps://play.google.com/store/apps/details?id=com.yangdai.simpleocr</string>
+    <string name="rate">Diese App bewerten</string>
+</resources>

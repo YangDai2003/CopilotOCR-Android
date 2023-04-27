@@ -1,0 +1,31 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Copilot OCR</string>
+    <string name="photo">Photo</string>
+    <string name="copy">Copy</string>
+    <string name="ocr">Text:</string>
+    <string name="camera">Camera</string>
+    <string name="album">Album</string>
+    <string name="cancel" tools:ignore="ButtonCase">Cancel</string>
+    <string name="copied">copied</string>
+    <string name="processing...">Processing…</string>
+    <string name="settings">Settings</string>
+    <string name="choose">Select the languages:</string>
+    <string name="zh" translatable="false">中文简繁</string>
+    <string name="en" translatable="false">English</string>
+    <string name="de" translatable="false">Deutsch</string>
+    <string name="confirm">Confirm</string>
+    <string name="message">Tip: Selecting fewer languages improves speed and accuracy.</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="sure">Are you sure you want to delete?</string>
+    <string name="edit">Edit</string>
+    <string name="about">About</string>
+    <string name="source">Open Source Licenses</string>
+    <string name="content">Functions:\n1. Offline Image OCR\n2. History of scanned images\n3. Edit, copy scanned text\n4. Automatically switch between light and dark modes according to the device, and automatically switch application languages\n5. Adapt to material design3\n6. Support Simplified Chinese, Traditional Chinese, English and German automatic recognition</string>
+    <string name="close">Close</string>
+    <string name="share">Share</string>
+    <string name="shareApp">Share this App</string>
+    <string name="ask">Please allow access permission first!</string>
+    <string name="shareContent">Get Copilot OCR from Google Play now:\nhttps://play.google.com/store/apps/details?id=com.yangdai.simpleocr</string>
+    <string name="rate">Rate this App</string>
+</resources>
