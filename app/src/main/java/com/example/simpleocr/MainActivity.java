@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.ExperimentalGetImage;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -38,6 +39,8 @@ import android.widget.Toast;
 
 import com.example.simpleocr.Adapters.OcrListAdapter;
 import com.example.simpleocr.DataBase.Room;
+import com.example.simpleocr.Model.ItemClick;
+import com.example.simpleocr.Model.OcrItem;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -53,14 +56,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+@ExperimentalGetImage public class MainActivity extends AppCompatActivity {
     AppBarLayout appBarLayout;
     MaterialToolbar materialToolbar;
     RecyclerView recyclerView;
-    FloatingActionButton button, openCamera, openAlbum;
+    FloatingActionButton button, openCamera, openAlbum, openScan;
     SwipeRefreshLayout refresh;
     Room room;
     OcrListAdapter ocrListAdapter;
@@ -68,13 +70,11 @@ public class MainActivity extends AppCompatActivity {
     int mPosition;
     ActivityResultLauncher<Intent> intentActivityResultLauncher1, intentActivityResultLauncher2;
     File parentFile;
-    private final boolean[] options = new boolean[]{true, true, true};
-    private final String[] languages = new String[]{"eng", "chi_all", "deu", "equ", "osd"};
-    private final List<String> list = new ArrayList<>(Arrays.asList(languages));
-    String lang = "chi_all+eng+deu+equ+osd";
+    String lang = "jpn+kor+equ";
+    int engineNum = 0;
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private void initUi(){
+    private void initUi() {
         appBarLayout = findViewById(R.id.appBar);
         appBarLayout.setStatusBarForeground(MaterialShapeDrawable.createWithElevationOverlay(this));
         materialToolbar = findViewById(R.id.materialToolbar);
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.fab_add_btn);
         openCamera = findViewById(R.id.camera_btn);
         openAlbum = findViewById(R.id.album_btn);
+        openScan = findViewById(R.id.scan_btn);
         refresh = findViewById(R.id.refresh);
         openCamera.setOnClickListener(v -> {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, OcrActivity.class);
                 intent.putExtra("launch", "camera");
                 intent.putExtra("langs", lang);
+                intent.putExtra("engine", engineNum);
                 intentActivityResultLauncher1.launch(intent);
             }
         });
@@ -105,20 +107,34 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, OcrActivity.class);
                 intent.putExtra("launch", "album");
                 intent.putExtra("langs", lang);
+                intent.putExtra("engine", engineNum);
+                intentActivityResultLauncher1.launch(intent);
+            }
+        });
+        openScan.setOnClickListener(v -> {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
+            } else {
+                Intent intent = new Intent(this, OcrActivity.class);
+                intent.putExtra("launch", "scancode");
                 intentActivityResultLauncher1.launch(intent);
             }
         });
         button.setOnClickListener(view -> {
-            ObjectAnimator objectAnimatorY1, objectAnimatorY2;
+            ObjectAnimator objectAnimatorY1, objectAnimatorY2, objectAnimatorY3;
             if (openCamera.getVisibility() == View.GONE) {
                 openCamera.setVisibility(View.VISIBLE);
                 openAlbum.setVisibility(View.VISIBLE);
+                openScan.setVisibility(View.VISIBLE);
                 objectAnimatorY1 = ObjectAnimator.ofFloat(openCamera, "translationY", -520f);
                 objectAnimatorY1.setDuration(200);
                 objectAnimatorY1.start();
                 objectAnimatorY2 = ObjectAnimator.ofFloat(openAlbum, "translationY", -260f);
                 objectAnimatorY2.setDuration(200);
                 objectAnimatorY2.start();
+                objectAnimatorY3 = ObjectAnimator.ofFloat(openScan, "translationX", -260f);
+                objectAnimatorY3.setDuration(200);
+                objectAnimatorY3.start();
                 button.setImageDrawable(getDrawable(R.drawable.baseline_clear_24));
             } else {
                 objectAnimatorY1 = ObjectAnimator.ofFloat(openCamera, "translationY", 0f);
@@ -127,13 +143,16 @@ public class MainActivity extends AppCompatActivity {
                 objectAnimatorY2 = ObjectAnimator.ofFloat(openAlbum, "translationY", 0f);
                 objectAnimatorY2.setDuration(200);
                 objectAnimatorY2.start();
+                objectAnimatorY3 = ObjectAnimator.ofFloat(openScan, "translationX", 0f);
+                objectAnimatorY3.setDuration(200);
+                objectAnimatorY3.start();
                 new Handler().postDelayed(() -> {
                     openCamera.setVisibility(View.GONE);
                     openAlbum.setVisibility(View.GONE);
-                }, 200); // 延时1秒
+                    openScan.setVisibility(View.GONE);
+                }, 200);
                 button.setImageDrawable(getDrawable(R.drawable.baseline_add_24));
             }
-
         });
         refresh.setOnRefreshListener(this::onRefresh);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -145,11 +164,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DynamicColors.applyToActivityIfAvailable(this);
         setContentView(R.layout.activity_main);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
         }
@@ -211,12 +232,27 @@ public class MainActivity extends AppCompatActivity {
             parentFile.mkdir();
         }
         copyFiles(); // 复制字库到手机
+
+        String[] deleteFilePaths = new String[]{"chi_all.traineddata", "eng.traineddata", "deu.traineddata", "osd.traineddata"};
+        try {
+            for (String path : deleteFilePaths) {
+                deleteLangFile(path);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    public void deleteLangFile(String filePath$Name) {
+        File file = new File(parentFile, filePath$Name);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            file.delete();
+        }
     }
 
     private void copyFiles() {
         AssetManager am = getAssets();
-        String[] dataFilePaths = new String[]{"chi_all.traineddata",
-                "eng.traineddata", "deu.traineddata", "equ.traineddata", "osd.traineddata"}; // 拷字库过去
+        String[] dataFilePaths = new String[]{"jpn.traineddata", "kor.traineddata", "equ.traineddata"}; // 拷字库过去
         for (String dataFilePath : dataFilePaths) {
             File engFile = new File(parentFile, dataFilePath);
             if (!engFile.exists()) {
@@ -346,28 +382,22 @@ public class MainActivity extends AppCompatActivity {
             dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             dialog.show();//显示对话框
             return true;
-        } else if (item.getItemId() == R.id.settings) {
-            final String[] items = {getString(R.string.en), getString(R.string.zh), getString(R.string.de)};
+        } else if (item.getItemId() == R.id.choose) {
+            final String[] items = {getString(R.string.engineOptions1), getString(R.string.engineOptions2)};
             MaterialAlertDialogBuilder alertBuilder = new MaterialAlertDialogBuilder(this);
-            alertBuilder.setTitle(getString(R.string.settings));
+            alertBuilder.setTitle(getString(R.string.engine));
             alertBuilder.setIcon(R.drawable.baseline_settings_24);
             alertBuilder.setCancelable(false);
-            // 0英语 1中文 2德语
-            alertBuilder.setMultiChoiceItems(items, options, (dialogInterface, i, isChecked) -> {
-                if (isChecked) {
-                    if (!list.contains(languages[i])) list.add(languages[i]);
+            // 0tess 1google
+            alertBuilder.setSingleChoiceItems(items, engineNum, (dialog1, which) -> {
+                if (which == 0) {
+                    engineNum = 0;
                 } else {
-                    list.remove(languages[i]);
+                    engineNum = 1;
                 }
-                options[i] = isChecked;
             });
             alertBuilder.setPositiveButton(getString(R.string.confirm), (dialogInterface, i) -> {
-                StringBuilder lang = new StringBuilder();
-                for (int j = 0; j < list.size(); ++j) {
-                    lang.append(list.get(j));
-                    if (j != list.size() - 1) lang.append("+");
-                }
-                this.lang = lang.toString();
+
             });
             alertBuilder.show();
             return true;

@@ -63,4 +63,14 @@
         android:contentDescription="@string/album"
         android:src="@drawable/baseline_insert_photo_24"
         android:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scan_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="25dp"
+        android:contentDescription="@string/scan"
+        android:src="@drawable/baseline_qr_code_scanner_24"
+        android:visibility="gone" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

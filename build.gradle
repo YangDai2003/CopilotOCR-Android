@@ -3,12 +3,13 @@ buildscript {
     repositories {
         google()
         maven { url "https://www.jitpack.io" }
+        maven { url 'https://developer.huawei.com/repo/' }
     }
     dependencies {
         classpath 'com.google.android.gms:oss-licenses-plugin:0.10.6'
     }
 }
 plugins {
-    id 'com.android.application' version '8.0.0' apply false
-    id 'com.android.library' version '8.0.0' apply false
+    id 'com.android.application' version '8.0.1' apply false
+    id 'com.android.library' version '8.0.1' apply false
 }

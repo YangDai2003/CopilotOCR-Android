@@ -1,12 +1,15 @@
 package com.example.simpleocr;
 
 import static com.example.simpleocr.FileUtils.FileSaveToInside;
+import static com.example.simpleocr.FileUtils.readPictureDegree;
+import static com.example.simpleocr.FileUtils.toTurn;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.ExperimentalGetImage;
 import androidx.core.app.ActivityOptionsCompat;
 
 import android.annotation.SuppressLint;
@@ -28,49 +31,63 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.simpleocr.Model.OcrItem;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.chinese.ChineseTextRecognizerOptions;
 import com.googlecode.tesseract.android.TessBaseAPI;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+@ExperimentalGetImage
 public class OcrActivity extends AppCompatActivity {
+    SpinKitView process;
     ImageButton copy, edit, share;
     ShapeableImageView imageButton;
     MaterialTextView textView;
     Bitmap bitmap;
-    ActivityResultLauncher<Intent> galleryActivityResultLauncher, cameraActivityResultLauncher, editActivityResultLauncher;
-    Uri sourceUri, destinationUri, resultUri;
+    ActivityResultLauncher<Intent> galleryActivityResultLauncher, cameraActivityResultLauncher, editActivityResultLauncher, cameraxActivityResultLauncher;
+    Uri sourceUri, destinationUri;
     TessBaseAPI mTess;
     OcrItem ocrItem;
     boolean oldItem;
-    String imageUri, dateStr;
+    String imageUri = "", dateStr = "";
     boolean changed = false;
+    TextRecognizer textRecognizer;
+    int engineNum;
 
     @Override
     public void finish() {
         String text = Objects.requireNonNull(textView.getText()).toString();
-        if (!text.isEmpty()) {
-            ocrItem.setText(text);
-            ocrItem.setImage(imageUri);
-            Intent intent = new Intent();
-            intent.putExtra("ocr_item", ocrItem);
-            setResult(Activity.RESULT_OK, intent);
+        if (!text.isEmpty() || !imageUri.isEmpty()) {
+            if (changed) {
+                ocrItem.setText(text);
+                ocrItem.setImage(imageUri);
+                Intent intent = new Intent();
+                intent.putExtra("ocr_item", ocrItem);
+                setResult(Activity.RESULT_OK, intent);
+            }
         }
         if (!oldItem) {
-            mTess.recycle();
+            if (engineNum == 1) mTess.recycle();
+            else if (engineNum == 0) textRecognizer.close();
         }
         super.finish();
     }
 
-    @SuppressLint("QueryPermissionsNeeded")
     private void initUI() {
+        process = findViewById(R.id.spin_kit);
         share = findViewById(R.id.buttonShare);
         edit = findViewById(R.id.buttonEdit);
         imageButton = findViewById(R.id.imageButton);
@@ -79,9 +96,8 @@ public class OcrActivity extends AppCompatActivity {
 
         copy.setOnClickListener(view -> {
             if (!Objects.requireNonNull(textView.getText()).toString().isEmpty()) {
-                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("", textView.getText());
-                cm.setPrimaryClip(clipData);
+                ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(clipData);
                 Toast.makeText(this, getString(R.string.copied), Toast.LENGTH_SHORT).show();
             }
         });
@@ -101,7 +117,7 @@ public class OcrActivity extends AppCompatActivity {
                     sendIntent.putExtra(Intent.EXTRA_TEXT, res.toString());
                     startActivity(Intent.createChooser(sendIntent, getString(R.string.share)));
                 } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "???", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "???", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -139,6 +155,7 @@ public class OcrActivity extends AppCompatActivity {
         initGalleryActivityResultLauncher();
         initCameraActivityResultLauncher();
         initEditActivityResultLauncher();
+        initCameraxActivityResultLauncher();
 
         ocrItem = new OcrItem();
         oldItem = true;
@@ -156,17 +173,22 @@ public class OcrActivity extends AppCompatActivity {
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, imageButton, "testImg").toBundle());
             });
         } else {
-            String lang = getIntent().getStringExtra("langs");
-            mTess = new TessBaseAPI();
-            try {
-                mTess.init(getFilesDir().getAbsolutePath(), lang, TessBaseAPI.OEM_LSTM_ONLY);
-            } catch (IllegalArgumentException ignored) {
+            engineNum = getIntent().getIntExtra("engine", -1);
+            if (engineNum == 1) {
+                String lang = getIntent().getStringExtra("langs");
+                mTess = new TessBaseAPI();
+                try {
+                    mTess.init(getFilesDir().getAbsolutePath(), lang, TessBaseAPI.OEM_LSTM_ONLY);
+                } catch (IllegalArgumentException ignored) {
+                }
+            } else if (engineNum == 0) {
+                textRecognizer = TextRecognition.getClient(new ChineseTextRecognizerOptions.Builder().build());
             }
             oldItem = false;
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            Date date = new Date();
-            dateStr = format.format(date);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            dateStr = formatter.format(LocalDateTime.now());
             ocrItem.setDate(dateStr);
+            changed = true;
         }
         Objects.requireNonNull(getSupportActionBar()).setTitle(dateStr);
         if (getIntent().getStringExtra("launch") != null && getIntent().getStringExtra("launch").equals("camera")) {
@@ -190,6 +212,9 @@ public class OcrActivity extends AppCompatActivity {
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 galleryActivityResultLauncher.launch(intent);
             }
+        } else if (getIntent().getStringExtra("launch") != null && getIntent().getStringExtra("launch").equals("scancode")) {
+            Intent intent = new Intent(this, CameraxActivity.class);
+            cameraxActivityResultLauncher.launch(intent);
         }
     }
 
@@ -198,7 +223,7 @@ public class OcrActivity extends AppCompatActivity {
             if (result.getData() != null && result.getResultCode() == Activity.RESULT_OK) {
                 sourceUri = result.getData().getData();
                 destinationUri = Uri.fromFile(new File(getCacheDir(), "CropImage.jpeg"));
-                startUcrop(OcrActivity.this, sourceUri, destinationUri);
+                startUcrop(this, sourceUri, destinationUri);
             }
         });
     }
@@ -206,8 +231,27 @@ public class OcrActivity extends AppCompatActivity {
     private void initCameraActivityResultLauncher() {
         cameraActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
-                Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "CropImage.jpeg"));
-                startUcrop(OcrActivity.this, sourceUri, destinationUri);
+                destinationUri = Uri.fromFile(new File(getCacheDir(), "CropImage.jpeg"));
+                startUcrop(this, sourceUri, destinationUri);
+            }
+        });
+    }
+
+    private void initCameraxActivityResultLauncher() {
+        cameraxActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                if (result.getData() != null) {
+                    textView.setText(result.getData().getStringExtra("code"));
+                    imageButton.setVisibility(View.VISIBLE);
+                    imageUri = result.getData().getStringExtra("uri");
+                    bitmap = BitmapFactory.decodeFile(imageUri);
+                    imageButton.setImageBitmap(bitmap);
+                    imageButton.setOnClickListener(v -> {
+                        Intent intent = new Intent(this, PhotoActivity.class);
+                        intent.putExtra("uri", imageUri);
+                        startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this, imageButton, "testImg").toBundle());
+                    });
+                }
             }
         });
     }
@@ -223,13 +267,11 @@ public class OcrActivity extends AppCompatActivity {
 
     public void startUcrop(Activity activity, Uri sourceUri, Uri destinationUri) {
         UCrop.Options options = new UCrop.Options();
-
         options.setToolbarWidgetColor(getColor(android.R.color.tab_indicator_text));
         options.setStatusBarColor(SurfaceColors.SURFACE_2.getColor(this));
         options.setToolbarColor(SurfaceColors.SURFACE_2.getColor(this));
-        UCrop uCrop = UCrop.of(sourceUri, destinationUri);
-        uCrop.withOptions(options);
-        uCrop.start(activity);
+        options.setFreeStyleCropEnabled(true);
+        UCrop.of(sourceUri, destinationUri).withOptions(options).start(activity);
     }
 
     @Override
@@ -237,21 +279,22 @@ public class OcrActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if (data != null) {
-                resultUri = UCrop.getOutput(data);
-                if (resultUri != null) {
-                    imageButton.setVisibility(View.VISIBLE);
-                    bitmap = BitmapFactory.decodeFile(resultUri.getPath());
-                    imageButton.setImageBitmap(bitmap);
-                    imageButton.setOnClickListener(v -> {
-                        Intent intent = new Intent(this, PhotoActivity.class);
-                        intent.putExtra("uri", resultUri.toString());
-                        startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this, imageButton, "testImg").toBundle());
-                    });
+                destinationUri = UCrop.getOutput(data);
+                if (destinationUri == null) {
+                    return;
                 }
+                imageButton.setVisibility(View.VISIBLE);
+                bitmap = toTurn(BitmapFactory.decodeFile(destinationUri.getPath()), readPictureDegree(destinationUri.getPath()));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+                imageUri = FileSaveToInside(this, formatter.format(LocalDateTime.now()), bitmap);
+                imageButton.setImageBitmap(bitmap);
+                imageButton.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, PhotoActivity.class);
+                    intent.putExtra("uri", imageUri);
+                    startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this, imageButton, "testImg").toBundle());
+                });
+                process.setVisibility(View.VISIBLE);
                 getText(bitmap);
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-                Date date = new Date();
-                imageUri = FileSaveToInside(this, format.format(date), bitmap);
             }
         }
     }
@@ -260,11 +303,33 @@ public class OcrActivity extends AppCompatActivity {
         textView.setText("");
         textView.setHint(R.string.processing___);
 
-        // Start process in another thread
-        new Thread(() -> {
-            mTess.setImage(bitmap);
-            String text = mTess.getUTF8Text();
-            runOnUiThread(() -> textView.setText(text));
-        }).start();
+        if (engineNum == 1) {
+            new Thread(() -> {
+                mTess.setImage(bitmap);
+//            mTess.setPageSegMode(TessBaseAPI.PageSegMode.PSM_SPARSE_TEXT_OSD);
+                String text = mTess.getUTF8Text();
+                runOnUiThread(() -> {
+                    process.setVisibility(View.GONE);
+                    if (text.isEmpty()) textView.setText(getString(R.string.nothing));
+                    else textView.setText(text);
+                });
+            }).start();
+        } else if (engineNum == 0) {
+            InputImage image = InputImage.fromBitmap(bitmap, 0);
+            textRecognizer.process(image)
+                    .addOnSuccessListener(visionText -> {
+                        process.setVisibility(View.GONE);
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (Text.TextBlock textBlock : visionText.getTextBlocks()) {
+                            for (Text.Line textLines : textBlock.getLines()) {
+                                stringBuilder.append(textLines.getText()).append(" ");
+                            }
+                            stringBuilder.append("\n");
+                        }
+                        if (stringBuilder.toString().isEmpty())
+                            textView.setText(getString(R.string.nothing));
+                        else textView.setText(stringBuilder.toString());
+                    }).addOnFailureListener(f -> textView.setText(getString(R.string.nothing)));
+        }
     }
 }

@@ -9,7 +9,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.simpleocr.OcrItem;
+import com.example.simpleocr.Model.OcrItem;
 
 import java.util.List;
 

@@ -41,7 +41,7 @@ public class EditActivity extends AppCompatActivity {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                return;
+
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);

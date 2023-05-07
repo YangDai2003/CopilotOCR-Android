@@ -84,27 +84,19 @@
         <item name="android:windowIsTranslucent">true</item>
         <!-- Dialog进入及退出动画 -->
         <item name="android:backgroundDimAmount">0.32</item>
-<!--        <item name="backgroundInsetBottom">80dp</item>-->
-<!--        <item name="backgroundInsetTop">80dp</item>-->
-<!--        <item name="backgroundInsetStart">24dp</item>-->
-<!--        <item name="backgroundInsetEnd">24dp</item>-->
     </style>
 
     <style name="RoundedStyle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">14dp</item>
     </style>
-
-    <style name="TransparentTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <!--设置窗口的背景是否为半透明，设置透明背景必须要设置此项-->
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:backgroundDimAmount">0.32</item>
+    <style name="HalfRoundedStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">14dp</item>
+        <item name="cornerSizeBottomLeft">14dp</item>
+    </style>
+    <style name="RoundedStyle1">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">35dp</item>
     </style>
 </resources>

@@ -12,10 +12,10 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.simpleocr.ItemClick;
-import com.example.simpleocr.OcrItem;
+import com.example.simpleocr.Model.ItemClick;
+import com.example.simpleocr.Model.OcrItem;
 import com.example.simpleocr.R;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
@@ -67,9 +67,9 @@ public class OcrListAdapter extends RecyclerView.Adapter<OcrListAdapter.ItemView
 
         holder.textView_text.setText(list.get(position).getText());
         holder.textView_date.setText(list.get(position).getDate());
-        String images = list.get(holder.getAdapterPosition()).getImage();
-        if (!images.isEmpty()) {
-            Glide.with(holder.itemView.getContext()).load(images).sizeMultiplier(0.8f).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.imageView);
+        String image = list.get(holder.getAdapterPosition()).getImage();
+        if (!image.isEmpty()) {
+            Glide.with(holder.itemView.getContext()).asBitmap().load(image).sizeMultiplier(0.8f).into(holder.imageView);
         } else {
             Glide.with(holder.itemView.getContext()).clear(holder.imageView);
         }
@@ -85,7 +85,7 @@ public class OcrListAdapter extends RecyclerView.Adapter<OcrListAdapter.ItemView
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView textView_text, textView_date;
-        ImageView imageView;
+        ShapeableImageView imageView;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -7,23 +7,34 @@
     <string name="album">Album</string>
     <string name="cancel">Abbrechen</string>
     <string name="app_name">Kopilot OCR</string>
-    <string name="copied">kopiert</string>
+    <string name="copied">Kopiert</string>
     <string name="processing...">Behandeln…</string>
     <string name="settings">Aufstellung</string>
     <string name="choose">Wählen die Sprachen:</string>
     <string name="confirm">Festlegen</string>
-    <string name="message">Tipp: Die Auswahl von weniger Sprachen verbessert die Geschwindigkeit und Genauigkeit.</string>
     <string name="save">Verwahren</string>
     <string name="delete">Entfernen</string>
     <string name="sure">Möchten Sie es wirklich löschen?</string>
     <string name="edit">Redaktion</string>
     <string name="about">Über</string>
     <string name="source">Open Source Lizenzen</string>
-    <string name="content">Funktionen:\n1. Ohne Internet Bild-OCR\n2. Verlauf gescannter Bilder\n3. Bearbeiten, Kopieren von gescanntem Text\n4. Automatischer Wechsel zwischen Hell- und Dunkelmodus je nach Gerät und automatischer Wechsel der Anwendungssprache\n5. Anpassung an Materialdesign3\n6. Unterstützt vereinfachtes Chinesisch, traditionelles Chinesisch, automatische Erkennung von Englisch und Deutsch</string>
+    <string name="content">Funktionen:\n 1) Offline-Bild-OCR mit mehreren Engines, schnell und genau. Neural Network Engine 1 unterstützt die automatische Erkennung von fast 100 Sprachen wie Chinesisch, Englisch, Deutsch, Spanisch usw. Wenn Sie Japanisch und Koreanisch erkennen müssen, verwenden Sie bitte Neural Network Engine 2\n 2) Der Verlauf gescannter Bilder wird gespeichert und kann mit einem Wisch gelöscht werden\n 3 ) Gescannten Text bearbeiten, kopieren und teilen\n 4) Automatische Umschaltung zwischen Hell- und Dunkelmodus je nach Gerät, Unterstützung von Chinesisch, Englisch und Deutsch in drei Anwendungssprachen\n 5) Material Design 3, mit reibungslos und konform Intuitive Animationen, und angepasst an neue Funktionen wie vorausschauende Rückkehrgesten\n 6) Die App kann auch schnell alle Arten von Barcodes und QR-Codes scannen</string>
     <string name="close">Schließen</string>
     <string name="share">Teilen</string>
     <string name="shareApp">Diese App teilen</string>
     <string name="ask">Bitte erlauben Sie zuerst die Zugriffsberechtigung!</string>
     <string name="shareContent">Laden Sie jetzt den Kopilot OCR von Google Play herunter:\nhttps://play.google.com/store/apps/details?id=com.yangdai.simpleocr</string>
     <string name="rate">Diese App bewerten</string>
+    <string name="engine">Wählen Sie eine Erkennungs-Engine</string>
+    <string name="engineOptions1">Neural Netzwerk Engine 1 (Empfohlen)</string>
+    <string name="engineOptions2">Neural Netzwerk Engine 2</string>
+    <string name="scan">Scannen</string>
+    <string name="nothing">Ki kann nichts finden.</string>
+    <string name="ssid">SSID:</string>
+    <string name="password">Passwort:</string>
+    <string name="title">Titel:</string>
+    <string name="uri">Uri:</string>
+    <string name="address">E-Mail Adresse:</string>
+    <string name="body">E-Mail Text:</string>
+    <string name="phone">Handy Nummer:</string>
 </resources>

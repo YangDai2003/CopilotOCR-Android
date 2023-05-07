@@ -6,26 +6,34 @@
     <string name="camera">Camera</string>
     <string name="album">Album</string>
     <string name="cancel" tools:ignore="ButtonCase">Cancel</string>
-    <string name="copied">copied</string>
+    <string name="copied">Copied</string>
     <string name="processing...">Processing…</string>
     <string name="settings">Settings</string>
     <string name="choose">Select the languages:</string>
-    <string name="zh" translatable="false">中文简繁</string>
-    <string name="en" translatable="false">English</string>
-    <string name="de" translatable="false">Deutsch</string>
     <string name="confirm">Confirm</string>
-    <string name="message">Tip: Selecting fewer languages improves speed and accuracy.</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="sure">Are you sure you want to delete?</string>
     <string name="edit">Edit</string>
     <string name="about">About</string>
     <string name="source">Open Source Licenses</string>
-    <string name="content">Functions:\n1. Offline Image OCR\n2. History of scanned images\n3. Edit, copy scanned text\n4. Automatically switch between light and dark modes according to the device, and automatically switch application languages\n5. Adapt to material design3\n6. Support Simplified Chinese, Traditional Chinese, English and German automatic recognition</string>
+    <string name="content">Features:\n 1) Multi-engine offline image OCR, fast and accurate. Neural Network Engine 1 supports automatic recognition of nearly 100 languages such as Chinese, English, German, Spanish, etc. If you need to recognize Japanese and Korean, please use Neural Network Engine 2\n 2) The history of scanned images, slide to delete\n 3) Edit, copy and share scanned text\n 4) Automatically switch light and dark modes according to device, support Chinese, English and German three application languages\n 5) Material Design 3, with smooth and intuitive animation, and adapted to new features such as predictive return gestures\n 6) Quickly scan all types of barcodes and QR codes</string>
     <string name="close">Close</string>
     <string name="share">Share</string>
     <string name="shareApp">Share this App</string>
     <string name="ask">Please allow access permission first!</string>
     <string name="shareContent">Get Copilot OCR from Google Play now:\nhttps://play.google.com/store/apps/details?id=com.yangdai.simpleocr</string>
     <string name="rate">Rate this App</string>
+    <string name="engine">Choose a recognition engine</string>
+    <string name="engineOptions1">Neural Network Engine 1 (Recommended)</string>
+    <string name="engineOptions2">Neural Network Engine 2</string>
+    <string name="scan">Scan</string>
+    <string name="nothing">Ai could not find anything.</string>
+    <string name="ssid">SSID:</string>
+    <string name="password">Password:</string>
+    <string name="title">Title:</string>
+    <string name="uri">Uri:</string>
+    <string name="address">Email address:</string>
+    <string name="body">Email body:</string>
+    <string name="phone">Phone number:</string>
 </resources>

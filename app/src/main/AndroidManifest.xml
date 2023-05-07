@@ -5,10 +5,17 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+    <uses-feature android:name="android.hardware.camera.any"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature android:name="android.hardware.camera.flash"/>
+
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
@@ -23,22 +30,27 @@
         android:supportsRtl="true"
         tools:targetApi="TIRAMISU">
         <activity
-            android:name=".PhotoActivity"
-            android:label="@string/photo"
+            android:name=".CameraxActivity"
             android:exported="false"
-            android:theme="@style/TransparentTheme"
-            android:parentActivityName=".OcrActivity"/>
+            android:parentActivityName=".OcrActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".PhotoActivity"
+            android:exported="false"
+            android:label="@string/photo"
+            android:parentActivityName=".OcrActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EditActivity"
             android:exported="false"
             android:label="@string/edit"
+            android:parentActivityName=".OcrActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".OcrActivity"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask"
             android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,9 +72,10 @@
         <activity
             android:name=".OcrActivity"
             android:exported="false"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity">
+
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+
         </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

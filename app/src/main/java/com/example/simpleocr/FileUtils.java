@@ -2,6 +2,9 @@ package com.example.simpleocr;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+
+import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,5 +48,35 @@ public class FileUtils {
         }
         //返回路径
         return path;
+    }
+
+    public static int readPictureDegree(String path) {
+        int degree = 0;
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return degree;
+    }
+
+    public static Bitmap toTurn(Bitmap img, int deg) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(deg);
+        int width = img.getWidth();
+        int height = img.getHeight();
+        return Bitmap.createBitmap(img, 0, 0, width, height, matrix, true);
     }
 }

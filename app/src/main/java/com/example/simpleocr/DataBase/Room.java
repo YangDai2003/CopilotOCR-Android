@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
-import com.example.simpleocr.OcrItem;
+import com.example.simpleocr.Model.OcrItem;
 
 @Database(entities = OcrItem.class, version = 1, exportSchema = false)
 public abstract class Room extends RoomDatabase {
