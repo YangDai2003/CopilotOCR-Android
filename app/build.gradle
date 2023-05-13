@@ -11,8 +11,8 @@ android {
         applicationId "com.yangdai.simpleocr"
         minSdk 28
         targetSdk 33
-        versionCode 6
-        versionName "6.0"
+        versionCode 7
+        versionName "7.0"
         resourceConfigurations += ["en", "de", "zh"]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,10 +39,6 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
     // If you want to additionally use the CameraX View class
     implementation "androidx.camera:camera-view:${camerax_version}"
-    // If you want to additionally add CameraX ML Kit Vision Integration
-    implementation "androidx.camera:camera-mlkit-vision:${camerax_version}"
-    // If you want to additionally use the CameraX Extensions library
-    implementation "androidx.camera:camera-extensions:${camerax_version}"
 
     implementation 'com.google.mlkit:barcode-scanning:17.1.0'
     // To recognize Chinese script
@@ -59,25 +55,13 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
-    // optional - RxJava2 support for Room
-    implementation "androidx.room:room-rxjava2:$room_version"
-
-    // optional - RxJava3 support for Room
-    implementation "androidx.room:room-rxjava3:$room_version"
-
-    // optional - Guava support for Room, including Optional and ListenableFuture
-    implementation "androidx.room:room-guava:$room_version"
-
-    // optional - Paging 3 Integration
-    implementation "androidx.room:room-paging:$room_version"
-
     implementation 'cz.adaptech.tesseract4android:tesseract4android-openmp:4.4.0'
     implementation(platform('org.jetbrains.kotlin:kotlin-bom:1.8.21'))
 
     implementation 'com.github.yalantis:ucrop:2.2.6-native'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

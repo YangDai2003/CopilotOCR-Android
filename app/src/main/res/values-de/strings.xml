@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="photo">Foto</string>
-    <string name="copy">kopieren</string>
+    <string name="copy">Kopieren</string>
     <string name="ocr">Text:</string>
     <string name="camera">Kamera</string>
     <string name="album">Album</string>

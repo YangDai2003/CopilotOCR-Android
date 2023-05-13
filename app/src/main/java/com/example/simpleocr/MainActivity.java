@@ -66,12 +66,12 @@ import java.util.List;
     SwipeRefreshLayout refresh;
     Room room;
     OcrListAdapter ocrListAdapter;
-    List<OcrItem> itemList = new ArrayList<>();
-    int mPosition;
+    private List<OcrItem> itemList = new ArrayList<>();
+    private int mPosition;
     ActivityResultLauncher<Intent> intentActivityResultLauncher1, intentActivityResultLauncher2;
     File parentFile;
-    String lang = "jpn+kor+equ";
-    int engineNum = 0;
+    private static final String lang = "jpn+kor+equ";
+    private int engineNum = 0;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void initUi() {

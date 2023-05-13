@@ -56,16 +56,17 @@ public class OcrActivity extends AppCompatActivity {
     ImageButton copy, edit, share;
     ShapeableImageView imageButton;
     MaterialTextView textView;
-    Bitmap bitmap;
-    ActivityResultLauncher<Intent> galleryActivityResultLauncher, cameraActivityResultLauncher, editActivityResultLauncher, cameraxActivityResultLauncher;
+    private Bitmap bitmap;
+    ActivityResultLauncher<Intent> galleryActivityResultLauncher, cameraActivityResultLauncher,
+            editActivityResultLauncher, cameraxActivityResultLauncher;
     Uri sourceUri, destinationUri;
     TessBaseAPI mTess;
     OcrItem ocrItem;
-    boolean oldItem;
+    private boolean oldItem;
     String imageUri = "", dateStr = "";
-    boolean changed = false;
+    private boolean changed = false;
     TextRecognizer textRecognizer;
-    int engineNum;
+    private int engineNum;
 
     @Override
     public void finish() {

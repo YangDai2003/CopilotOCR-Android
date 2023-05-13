@@ -49,13 +49,13 @@ import java.util.Objects;
 
 @ExperimentalGetImage
 public class CameraxActivity extends AppCompatActivity {
-    ImageView success, imageView, back;
+    private ImageView success, imageView, back;
     private ImageAnalysis imageAnalysis;
     private BarcodeScanner scanner;
-    PreviewView viewFinder;
-    FocusView focusView;
-    Camera camera;
-    String savedUri;
+    private PreviewView viewFinder;
+    private FocusView focusView;
+    private Camera camera;
+    private String savedUri;
     private float fingerSpacing = 0;
 
     private void setZoomRatio(float zoomRatio) {

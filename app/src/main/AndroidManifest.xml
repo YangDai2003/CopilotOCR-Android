@@ -32,8 +32,10 @@
         <activity
             android:name=".CameraxActivity"
             android:exported="false"
+            android:screenOrientation="userPortrait"
             android:parentActivityName=".OcrActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".PhotoActivity"
             android:exported="false"

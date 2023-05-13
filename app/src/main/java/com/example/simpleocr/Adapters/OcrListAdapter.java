@@ -20,9 +20,9 @@ import com.google.android.material.imageview.ShapeableImageView;
 import java.util.List;
 
 public class OcrListAdapter extends RecyclerView.Adapter<OcrListAdapter.ItemViewHolder> {
-    List<OcrItem> list;
+    private final List<OcrItem> list;
     ItemClick itemClick;
-    boolean scrollUp = false;
+    private boolean scrollUp = false;
 
     public OcrListAdapter(List<OcrItem> list, ItemClick itemClick) {
         this.list = list;
