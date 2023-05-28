@@ -32,6 +32,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Material3.BottomSheetDialog</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.Material3.Light.NoActionBar">
@@ -65,6 +66,7 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Material3.BottomSheetDialog</item>
     </style>
 
     <style name="ActionSheetDialogStyle" parent="ThemeOverlay.Material3.Dialog">

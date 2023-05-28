@@ -37,4 +37,6 @@
     <string name="address">E-Mail Adresse:</string>
     <string name="body">E-Mail Text:</string>
     <string name="phone">Handy Nummer:</string>
+    <string name="appInfo">Anwendungseinführung</string>
+    <string name="deleteAll">Alle Datensätze löschen</string>
 </resources>

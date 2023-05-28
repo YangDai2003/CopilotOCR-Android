@@ -6,7 +6,7 @@
     <string name="camera">相机</string>
     <string name="album">相册</string>
     <string name="cancel">取消</string>
-    <string name="app_name">OCR助手</string>
+    <string name="app_name">OCR 助手</string>
     <string name="copied">已复制</string>
     <string name="processing...">处理中…</string>
     <string name="settings">设置</string>
@@ -37,4 +37,6 @@
     <string name="address">邮箱地址:</string>
     <string name="body">电子邮件正文:</string>
     <string name="phone">电话号码:</string>
+    <string name="appInfo">应用介绍</string>
+    <string name="deleteAll">清除全部记录</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.example.simpleocr;
 
+import static com.example.simpleocr.FileUtils.copyFile;
+import static com.example.simpleocr.FileUtils.deleteLangFile;
+import static com.example.simpleocr.FileUtils.deleteRecursive;
 import static com.example.simpleocr.FileUtils.deleteSingleFile;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,46 +22,37 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.example.simpleocr.Adapters.OcrListAdapter;
 import com.example.simpleocr.DataBase.Room;
 import com.example.simpleocr.Model.ItemClick;
 import com.example.simpleocr.Model.OcrItem;
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.shape.MaterialShapeDrawable;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@ExperimentalGetImage public class MainActivity extends AppCompatActivity {
+@ExperimentalGetImage
+public class MainActivity extends AppCompatActivity {
     AppBarLayout appBarLayout;
     MaterialToolbar materialToolbar;
     RecyclerView recyclerView;
@@ -81,12 +75,14 @@ import java.util.List;
         setSupportActionBar(materialToolbar);
         materialToolbar.setTitleCentered(true);
         materialToolbar.setNavigationIcon(R.drawable.baseline_menu_24);
+
         recyclerView = findViewById(R.id.recycler_view);
         button = findViewById(R.id.fab_add_btn);
         openCamera = findViewById(R.id.camera_btn);
         openAlbum = findViewById(R.id.album_btn);
         openScan = findViewById(R.id.scan_btn);
         refresh = findViewById(R.id.refresh);
+
         openCamera.setOnClickListener(v -> {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
@@ -225,6 +221,23 @@ import java.util.List;
             }
         });
 
+        getSupportFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
+            if (requestKey.equals("requestKey") && bundle != null) {
+                if (bundle.getBoolean("clear", false)) {
+                    SpinKitView process = findViewById(R.id.spin_kit);
+                    process.setVisibility(View.VISIBLE);
+                    room.clearAllTables();
+                    File dir = getFilesDir();
+                    deleteRecursive(dir);
+                    new Handler().postDelayed(() -> {
+                        itemList = room.dao().getAll();
+                        updateRecycler(itemList);
+                        process.setVisibility(View.GONE);
+                    }, 2000);
+                }
+            }
+        });
+
         String mDataPath = getFilesDir().getAbsolutePath();
 
         parentFile = new File(mDataPath, "tessdata");
@@ -236,17 +249,9 @@ import java.util.List;
         String[] deleteFilePaths = new String[]{"chi_all.traineddata", "eng.traineddata", "deu.traineddata", "osd.traineddata"};
         try {
             for (String path : deleteFilePaths) {
-                deleteLangFile(path);
+                deleteLangFile(path, parentFile);
             }
         } catch (Exception ignored) {
-        }
-    }
-
-    public void deleteLangFile(String filePath$Name) {
-        File file = new File(parentFile, filePath$Name);
-        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
-        if (file.exists() && file.isFile()) {
-            file.delete();
         }
     }
 
@@ -261,22 +266,7 @@ import java.util.List;
         }
     }
 
-    private static void copyFile(@NonNull AssetManager am, @NonNull String assetName, @NonNull File outFile) {
-        try (
-                InputStream in = am.open(assetName);
-                OutputStream out = new FileOutputStream(outFile)
-        ) {
-            byte[] buffer = new byte[1024];
-            int read;
-            while ((read = in.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected void onRefresh() {//刷新
+    public void onRefresh() {//刷新
         new Handler().postDelayed(() -> {
             itemList = room.dao().getAll();
             updateRecycler(itemList);
@@ -348,39 +338,10 @@ import java.util.List;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Dialog dialog = new Dialog(this, R.style.ActionSheetDialogStyle);
-            //填充对话框的布局
-            View inflate = View.inflate(this, R.layout.about, null);
-            inflate.setBackground(new MaterialAlertDialogBuilder(this).getBackground());
-            //初始化控件
-            MaterialButton source = inflate.findViewById(R.id.source);
-            MaterialButton close = inflate.findViewById(R.id.close);
-            MaterialButton share = inflate.findViewById(R.id.share);
-            MaterialButton rate = inflate.findViewById(R.id.rate);
-            rate.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.yangdai.simpleocr"));
-                startActivity(intent);
-            });
-            share.setOnClickListener(v -> {
-                Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                sendIntent.setType("text/plain");
-                sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.shareContent));
-                startActivity(Intent.createChooser(sendIntent, ""));
-            });
-            source.setOnClickListener(v -> {
-                OssLicensesMenuActivity.setActivityTitle(getString(R.string.source));
-                startActivity(new Intent(this, OssLicensesMenuActivity.class));
-            });
-            close.setOnClickListener(v -> dialog.dismiss());
-            //将布局设置给Dialog
-            dialog.setContentView(inflate);
-            dialog.setCancelable(false);
-            //获取当前Activity所在的窗体
-            Window dialogWindow = dialog.getWindow();
-            //设置Dialog从窗体底部弹出
-            dialogWindow.setGravity(Gravity.CENTER);
-            dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.show();//显示对话框
+            // 创建Material3 Bottom Sheet
+            MyBottomSheetDialog bottomSheetDialog = new MyBottomSheetDialog();
+            // 显示Bottom Sheet
+            bottomSheetDialog.show(getSupportFragmentManager(), "bottom_sheet_tag");
             return true;
         } else if (item.getItemId() == R.id.choose) {
             final String[] items = {getString(R.string.engineOptions1), getString(R.string.engineOptions2)};

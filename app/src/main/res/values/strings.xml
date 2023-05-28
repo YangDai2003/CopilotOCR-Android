@@ -36,4 +36,6 @@
     <string name="address">Email address:</string>
     <string name="body">Email body:</string>
     <string name="phone">Phone number:</string>
+    <string name="appInfo">Application introduction</string>
+    <string name="deleteAll">Clear all scan history</string>
 </resources>

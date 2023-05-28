@@ -1,14 +1,19 @@
 package com.example.simpleocr;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 
+import androidx.annotation.NonNull;
 import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Objects;
 
 public class FileUtils {
     public static void deleteSingleFile(String filePath$Name) {
@@ -78,5 +83,35 @@ public class FileUtils {
         int width = img.getWidth();
         int height = img.getHeight();
         return Bitmap.createBitmap(img, 0, 0, width, height, matrix, true);
+    }
+
+    public static void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.exists() && fileOrDirectory.isDirectory())
+            for (File child : Objects.requireNonNull(fileOrDirectory.listFiles()))
+                deleteRecursive(child);
+        fileOrDirectory.delete();
+    }
+
+    public static void deleteLangFile(String filePath$Name, File parentFile) {
+        File file = new File(parentFile, filePath$Name);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            file.delete();
+        }
+    }
+
+    public static void copyFile(@NonNull AssetManager am, @NonNull String assetName, @NonNull File outFile) {
+        try (
+                InputStream in = am.open(assetName);
+                OutputStream out = new FileOutputStream(outFile)
+        ) {
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,91 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="64dp"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/appName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingTop="16dp"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="@string/app_name" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="4dp"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        android:text="@string/content" />
-
-    <com.google.android.material.divider.MaterialDivider
+    <FrameLayout
+        android:id="@+id/frame"
+        style="@style/Widget.Material3.BottomSheet.DragHandle"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginVertical="2dp"
-        app:dividerColor="?colorOnSurface"
-        android:layout_marginHorizontal="36dp">
+        android:layout_height="match_parent">
 
-    </com.google.android.material.divider.MaterialDivider>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/source"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/source"
-        style="@style/Widget.Material3.Button.TextButton.Dialog.Flush"
-        app:icon="@drawable/baseline_assignment_24"
-        app:iconTint="?colorOnPrimaryContainer"
-        android:textColor="?colorOnPrimaryContainer"
-        app:iconGravity="textStart"/>
+            <!-- Drag handle for accessibility -->
+            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:id="@+id/drag_handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/share"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/shareApp"
-        style="@style/Widget.Material3.Button.TextButton.Dialog.Flush"
-        app:icon="@drawable/baseline_share_24"
-        app:iconTint="?colorOnPrimaryContainer"
-        android:textColor="?colorOnPrimaryContainer"
-        app:iconGravity="textStart"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:text="@string/appInfo"
+                android:textColor="?colorOnPrimaryContainer"
+                app:icon="@drawable/baseline_info_24"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/rate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/rate"
-        style="@style/Widget.Material3.Button.TextButton.Dialog.Flush"
-        app:icon="@drawable/baseline_rate_review_24"
-        app:iconTint="?colorOnPrimaryContainer"
-        android:textColor="?colorOnPrimaryContainer"
-        app:iconGravity="textStart"/>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginVertical="2dp" />
 
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        app:dividerColor="?colorOnSurface"
-        android:layout_marginHorizontal="36dp">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/source"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:text="@string/source"
+                android:textColor="?colorOnPrimaryContainer"
+                app:icon="@drawable/baseline_assignment_24"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp" />
 
-    </com.google.android.material.divider.MaterialDivider>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/share"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:text="@string/shareApp"
+                android:textColor="?colorOnPrimaryContainer"
+                app:icon="@drawable/baseline_share_24"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/close"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        style="@style/Widget.Material3.Button.TextButton.Dialog.Flush"
-        android:textColor="?colorOnPrimaryContainer"
-        android:text="@string/close" />
-</LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:text="@string/rate"
+                android:textColor="?colorOnPrimaryContainer"
+                app:icon="@drawable/baseline_rate_review_24"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginVertical="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:text="@string/deleteAll"
+                android:textColor="?colorOnPrimaryContainer"
+                app:icon="@drawable/baseline_delete_outline_24"
+                app:iconGravity="textStart"
+                app:iconTint="@android:color/holo_red_dark"
+                app:iconPadding="10dp" />
+        </LinearLayout>
+    </FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
