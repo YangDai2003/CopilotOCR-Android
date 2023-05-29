@@ -11,8 +11,8 @@ android {
         applicationId "com.yangdai.simpleocr"
         minSdk 28
         targetSdk 33
-        versionCode 8
-        versionName "8.0"
+        versionCode 10
+        versionName "9.5"
         resourceConfigurations += ["en", "de", "zh"]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

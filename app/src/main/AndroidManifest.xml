@@ -29,7 +29,7 @@
         android:label="@string/app_name"
         android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
-        tools:targetApi="TIRAMISU">
+        tools:targetApi="tiramisu">
         <activity
             android:name=".CameraxActivity"
             android:exported="false"
@@ -50,6 +50,7 @@
             android:parentActivityName=".OcrActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -75,9 +76,9 @@
         <activity
             android:name=".OcrActivity"
             android:exported="false"
-
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:theme="@style/AppTheme.NoActionBar" />

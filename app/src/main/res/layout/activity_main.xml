@@ -30,48 +30,55 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layoutAnimation="@anim/anim_layout"
-            android:overScrollMode="ifContentScrolls" />
+            android:layoutAnimation="@anim/anim_layout" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_btn"
+        style="@style/Widget.Material3.FloatingActionButton.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="25dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/baseline_add_24" />
+        android:src="@drawable/baseline_add_24"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Material3.Button" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/camera_btn"
+        style="@style/Widget.Material3.FloatingActionButton.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="25dp"
         android:contentDescription="@string/camera"
         android:src="@drawable/baseline_photo_camera_24"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Material3.Button"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/album_btn"
+        style="@style/Widget.Material3.FloatingActionButton.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="25dp"
         android:contentDescription="@string/album"
         android:src="@drawable/baseline_insert_photo_24"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Material3.Button"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/scan_btn"
+        style="@style/Widget.Material3.FloatingActionButton.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="25dp"
         android:contentDescription="@string/scan"
         android:src="@drawable/baseline_qr_code_scanner_24"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Material3.Button"/>
 
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/spin_kit"

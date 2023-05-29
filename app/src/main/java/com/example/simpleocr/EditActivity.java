@@ -23,7 +23,7 @@ public class EditActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        String text = Objects.requireNonNull(textInputEditText.getText()).toString();
+        CharSequence text = textInputEditText.getText();
         Intent intent = new Intent();
         intent.putExtra("text", text);
         setResult(Activity.RESULT_OK, intent);

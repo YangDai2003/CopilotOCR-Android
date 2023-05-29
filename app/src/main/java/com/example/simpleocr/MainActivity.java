@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +21,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 
 import android.content.Intent;
@@ -66,8 +66,9 @@ public class MainActivity extends AppCompatActivity {
     File parentFile;
     private static final String lang = "jpn+kor+equ";
     private int engineNum = 0;
+    ObjectAnimator objectAnimatorY1, objectAnimatorY2, objectAnimatorY3;
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+
     private void initUi() {
         appBarLayout = findViewById(R.id.appBar);
         appBarLayout.setStatusBarForeground(MaterialShapeDrawable.createWithElevationOverlay(this));
@@ -117,47 +118,56 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         button.setOnClickListener(view -> {
-            ObjectAnimator objectAnimatorY1, objectAnimatorY2, objectAnimatorY3;
             if (openCamera.getVisibility() == View.GONE) {
-                openCamera.setVisibility(View.VISIBLE);
-                openAlbum.setVisibility(View.VISIBLE);
-                openScan.setVisibility(View.VISIBLE);
-                objectAnimatorY1 = ObjectAnimator.ofFloat(openCamera, "translationY", -520f);
-                objectAnimatorY1.setDuration(200);
-                objectAnimatorY1.start();
-                objectAnimatorY2 = ObjectAnimator.ofFloat(openAlbum, "translationY", -260f);
-                objectAnimatorY2.setDuration(200);
-                objectAnimatorY2.start();
-                objectAnimatorY3 = ObjectAnimator.ofFloat(openScan, "translationX", -260f);
-                objectAnimatorY3.setDuration(200);
-                objectAnimatorY3.start();
-                button.setImageDrawable(getDrawable(R.drawable.baseline_clear_24));
+                showOptions();
             } else {
-                objectAnimatorY1 = ObjectAnimator.ofFloat(openCamera, "translationY", 0f);
-                objectAnimatorY1.setDuration(200);
-                objectAnimatorY1.start();
-                objectAnimatorY2 = ObjectAnimator.ofFloat(openAlbum, "translationY", 0f);
-                objectAnimatorY2.setDuration(200);
-                objectAnimatorY2.start();
-                objectAnimatorY3 = ObjectAnimator.ofFloat(openScan, "translationX", 0f);
-                objectAnimatorY3.setDuration(200);
-                objectAnimatorY3.start();
-                new Handler().postDelayed(() -> {
-                    openCamera.setVisibility(View.GONE);
-                    openAlbum.setVisibility(View.GONE);
-                    openScan.setVisibility(View.GONE);
-                }, 200);
-                button.setImageDrawable(getDrawable(R.drawable.baseline_add_24));
+                hideOptions();
             }
         });
         refresh.setOnRefreshListener(this::onRefresh);
+        refresh.setProgressViewEndTarget(true, (int) (getResources().getDisplayMetrics().density * 100));
+        refresh.setDistanceToTriggerSync((int) (getResources().getDisplayMetrics().density * 200));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                ocrListAdapter.setScrollUp(dy > 20);
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (openCamera.getVisibility() != View.GONE) hideOptions();
             }
         });
+    }
+
+    private void showOptions() {
+        openCamera.setVisibility(View.VISIBLE);
+        openAlbum.setVisibility(View.VISIBLE);
+        openScan.setVisibility(View.VISIBLE);
+        objectAnimatorY1 = ObjectAnimator.ofFloat(openCamera, "translationY", -getResources().getDisplayMetrics().density * 150);
+        objectAnimatorY1.setDuration(200);
+        objectAnimatorY1.start();
+        objectAnimatorY2 = ObjectAnimator.ofFloat(openAlbum, "translationY", -getResources().getDisplayMetrics().density * 75);
+        objectAnimatorY2.setDuration(200);
+        objectAnimatorY2.start();
+        objectAnimatorY3 = ObjectAnimator.ofFloat(openScan, "translationX", -getResources().getDisplayMetrics().density * 75);
+        objectAnimatorY3.setDuration(200);
+        objectAnimatorY3.start();
+        button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_clear_24));
+    }
+
+    private void hideOptions(){
+        objectAnimatorY1 = ObjectAnimator.ofFloat(openCamera, "translationY", 0f);
+        objectAnimatorY1.setDuration(200);
+        objectAnimatorY1.start();
+        objectAnimatorY2 = ObjectAnimator.ofFloat(openAlbum, "translationY", 0f);
+        objectAnimatorY2.setDuration(200);
+        objectAnimatorY2.start();
+        objectAnimatorY3 = ObjectAnimator.ofFloat(openScan, "translationX", 0f);
+        objectAnimatorY3.setDuration(200);
+        objectAnimatorY3.start();
+        new Handler().postDelayed(() -> {
+            openCamera.setVisibility(View.GONE);
+            openAlbum.setVisibility(View.GONE);
+            openScan.setVisibility(View.GONE);
+        }, 200);
+        button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_add_24));
     }
 
 
@@ -345,22 +355,20 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (item.getItemId() == R.id.choose) {
             final String[] items = {getString(R.string.engineOptions1), getString(R.string.engineOptions2)};
-            MaterialAlertDialogBuilder alertBuilder = new MaterialAlertDialogBuilder(this);
-            alertBuilder.setTitle(getString(R.string.engine));
-            alertBuilder.setIcon(R.drawable.baseline_settings_24);
-            alertBuilder.setCancelable(false);
-            // 0tess 1google
-            alertBuilder.setSingleChoiceItems(items, engineNum, (dialog1, which) -> {
-                if (which == 0) {
-                    engineNum = 0;
-                } else {
-                    engineNum = 1;
-                }
-            });
-            alertBuilder.setPositiveButton(getString(R.string.confirm), (dialogInterface, i) -> {
-
-            });
-            alertBuilder.show();
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(getString(R.string.engine))
+                    .setIcon(R.drawable.baseline_settings_24)
+                    .setCancelable(false)
+                    //0 google 1 tess
+                    .setSingleChoiceItems(items, engineNum, (dialog1, which) -> {
+                        if (which == 0) {
+                            engineNum = 0;
+                        } else {
+                            engineNum = 1;
+                        }
+                    })
+                    .setPositiveButton(getString(R.string.confirm), null)
+                    .show();
             return true;
         }
         return super.onOptionsItemSelected(item);

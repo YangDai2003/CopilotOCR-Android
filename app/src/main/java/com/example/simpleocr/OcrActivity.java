@@ -260,7 +260,7 @@ public class OcrActivity extends AppCompatActivity {
     private void initEditActivityResultLauncher() {
         editActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getData() != null && result.getResultCode() == Activity.RESULT_OK) {
-                textView.setText(result.getData().getStringExtra("text"));
+                textView.setText(result.getData().getCharSequenceExtra("text"));
                 changed = true;
             }
         });

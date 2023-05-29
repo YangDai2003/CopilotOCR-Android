@@ -22,24 +22,16 @@ import java.util.List;
 public class OcrListAdapter extends RecyclerView.Adapter<OcrListAdapter.ItemViewHolder> {
     private final List<OcrItem> list;
     ItemClick itemClick;
-    private boolean scrollUp = false;
 
     public OcrListAdapter(List<OcrItem> list, ItemClick itemClick) {
         this.list = list;
         this.itemClick = itemClick;
     }
 
-    public void setScrollUp(boolean scroll) {
-        scrollUp = scroll;
-    }
-
     @Override
     public void onViewAttachedToWindow(@NonNull ItemViewHolder holder) {
         super.onViewAttachedToWindow(holder);
-        if (scrollUp) {
-            addAnimation(holder);
-        }
-        scrollUp = false;
+        addAnimation(holder);
     }
 
     private void addAnimation(ItemViewHolder holder) {
