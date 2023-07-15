@@ -70,6 +70,8 @@ public class FileUtils {
                 case ExifInterface.ORIENTATION_ROTATE_270:
                     degree = 270;
                     break;
+                default:
+                    break;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -86,9 +88,11 @@ public class FileUtils {
     }
 
     public static void deleteRecursive(File fileOrDirectory) {
-        if (fileOrDirectory.exists() && fileOrDirectory.isDirectory())
-            for (File child : Objects.requireNonNull(fileOrDirectory.listFiles()))
+        if (fileOrDirectory.exists() && fileOrDirectory.isDirectory()) {
+            for (File child : Objects.requireNonNull(fileOrDirectory.listFiles())) {
                 deleteRecursive(child);
+            }
+        }
         fileOrDirectory.delete();
     }
 

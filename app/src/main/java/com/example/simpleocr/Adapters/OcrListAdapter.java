@@ -57,8 +57,8 @@ public class OcrListAdapter extends RecyclerView.Adapter<OcrListAdapter.ItemView
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
 
-        holder.textView_text.setText(list.get(position).getText());
-        holder.textView_date.setText(list.get(position).getDate());
+        holder.textViewText.setText(list.get(position).getText());
+        holder.textViewDate.setText(list.get(position).getDate());
         String image = list.get(holder.getAdapterPosition()).getImage();
         if (!image.isEmpty()) {
             Glide.with(holder.itemView.getContext()).asBitmap().load(image).sizeMultiplier(0.8f).into(holder.imageView);
@@ -76,15 +76,15 @@ public class OcrListAdapter extends RecyclerView.Adapter<OcrListAdapter.ItemView
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
-        TextView textView_text, textView_date;
+        TextView textViewText, textViewDate;
         ShapeableImageView imageView;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             cardView = itemView.findViewById(R.id.card_container);
-            textView_text = itemView.findViewById(R.id.textview_text);
-            textView_date = itemView.findViewById(R.id.textview_date);
+            textViewText = itemView.findViewById(R.id.textview_text);
+            textViewDate = itemView.findViewById(R.id.textview_date);
             imageView = itemView.findViewById(R.id.imageShow);
         }
     }

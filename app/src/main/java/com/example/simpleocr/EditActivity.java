@@ -16,6 +16,9 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
+/**
+ * @author 30415
+ */
 public class EditActivity extends AppCompatActivity {
 
     TextInputEditText textInputEditText;

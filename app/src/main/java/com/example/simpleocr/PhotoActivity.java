@@ -8,6 +8,9 @@ import android.os.Bundle;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.color.DynamicColors;
 
+/**
+ * @author 30415
+ */
 public class PhotoActivity extends AppCompatActivity {
     PhotoView photoView;
 

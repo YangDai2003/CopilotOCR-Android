@@ -7,6 +7,9 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+/**
+ * @author 30415
+ */
 public class FocusView extends View {
     private Paint paint;
     private int x, y;

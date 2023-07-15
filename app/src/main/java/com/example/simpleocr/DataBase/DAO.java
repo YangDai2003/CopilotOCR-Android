@@ -13,6 +13,9 @@ import com.example.simpleocr.Model.OcrItem;
 
 import java.util.List;
 
+/**
+ * @author 30415
+ */
 @Dao
 public interface DAO {
 

@@ -20,6 +20,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+/**
+ * @author 30415
+ */
 public class MyBottomSheetDialog extends BottomSheetDialogFragment {
     @NonNull
     @Override
@@ -45,7 +48,7 @@ public class MyBottomSheetDialog extends BottomSheetDialogFragment {
         MaterialButton rate = view.findViewById(R.id.rate);
 
         info.setOnClickListener(v -> {
-            new MaterialAlertDialogBuilder(getActivity())
+            new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.appInfo)
                     .setMessage(R.string.content)
                     .setPositiveButton(R.string.confirm, null)
@@ -71,7 +74,7 @@ public class MyBottomSheetDialog extends BottomSheetDialogFragment {
         });
         deleteAll.setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();
-            new MaterialAlertDialogBuilder(getActivity())
+            new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(getString(R.string.deleteAll))
                     .setPositiveButton(getString(R.string.confirm),
                             (dialog, which) -> {

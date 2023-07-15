@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,9 +48,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * @author 30415
+ */
 @ExperimentalGetImage
 public class CameraxActivity extends AppCompatActivity {
-    private ImageView success, imageView, back;
+    private ImageView success;
+    private ImageView imageView;
     private ImageAnalysis imageAnalysis;
     private BarcodeScanner scanner;
     private PreviewView viewFinder;
@@ -97,7 +102,7 @@ public class CameraxActivity extends AppCompatActivity {
         focusView.setVisibility(View.GONE);
         success = findViewById(R.id.success);
         imageView = findViewById(R.id.imageView);
-        back = findViewById(R.id.imageView1);
+        ImageView back = findViewById(R.id.imageView1);
         back.getBackground().setAlpha(50);
         imageView.setClickable(true);
         imageView.bringToFront();
@@ -165,7 +170,7 @@ public class CameraxActivity extends AppCompatActivity {
                                             viewFinder.getMeteringPointFactory()
                                                     .createPoint(event.getX(), event.getY())).build();
                                     camera.getCameraControl().startFocusAndMetering(action);
-                                    new Handler().postDelayed(() -> focusView.setVisibility(View.GONE), 1000);
+                                    new Handler(Looper.getMainLooper()).postDelayed(() -> focusView.setVisibility(View.GONE), 1000);
                                 }
                                 // 单指点击对焦
                                 break;
@@ -186,6 +191,8 @@ public class CameraxActivity extends AppCompatActivity {
                                 break;
                             case MotionEvent.ACTION_POINTER_UP:
                                 fingerSpacing = 0;
+                                break;
+                            default:
                                 break;
                         }
                     } catch (Exception e) {
@@ -216,31 +223,38 @@ public class CameraxActivity extends AppCompatActivity {
                                 case Barcode.TYPE_WIFI:
                                     String ssid = Objects.requireNonNull(barcode.getWifi()).getSsid();
                                     String password = barcode.getWifi().getPassword();
-                                    if (ssid != null && !ssid.isEmpty())
+                                    if (ssid != null && !ssid.isEmpty()) {
                                         codeInfo.append(getString(R.string.ssid)).append(" ").append(ssid).append("\n");
-                                    if (password != null && !password.isEmpty())
+                                    }
+                                    if (password != null && !password.isEmpty()) {
                                         codeInfo.append(getString(R.string.password)).append(" ").append(password).append("\n");
+                                    }
                                     break;
                                 case Barcode.TYPE_URL:
                                     String title = Objects.requireNonNull(barcode.getUrl()).getTitle();
                                     String uri = barcode.getUrl().getUrl();
-                                    if (title != null && !title.isEmpty())
+                                    if (title != null && !title.isEmpty()) {
                                         codeInfo.append(getString(R.string.title)).append(" ").append(title).append("\n");
-                                    if (uri != null && !uri.isEmpty())
+                                    }
+                                    if (uri != null && !uri.isEmpty()) {
                                         codeInfo.append(getString(R.string.uri)).append(" ").append(uri).append("\n");
+                                    }
                                     break;
                                 case Barcode.TYPE_EMAIL:
                                     String address = Objects.requireNonNull(barcode.getEmail()).getAddress();
                                     String body = barcode.getEmail().getBody();
-                                    if (address != null && !address.isEmpty())
+                                    if (address != null && !address.isEmpty()) {
                                         codeInfo.append(getString(R.string.address)).append(" ").append(address).append("\n");
-                                    if (body != null && !body.isEmpty())
+                                    }
+                                    if (body != null && !body.isEmpty()) {
                                         codeInfo.append(getString(R.string.body)).append(" ").append(body).append("\n");
+                                    }
                                     break;
                                 case Barcode.TYPE_PHONE:
                                     String number = Objects.requireNonNull(barcode.getPhone()).getNumber();
-                                    if (number != null && !number.isEmpty())
+                                    if (number != null && !number.isEmpty()) {
                                         codeInfo.append(getString(R.string.phone)).append(" ").append(number).append("\n");
+                                    }
                                     break;
                                 default:
                                     String raw = barcode.getRawValue();

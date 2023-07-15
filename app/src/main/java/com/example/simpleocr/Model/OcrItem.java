@@ -6,10 +6,13 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
+/**
+ * @author 30415
+ */
 @Entity(tableName = "items")
 public class OcrItem implements Serializable {
     @PrimaryKey(autoGenerate = true)
-    long ID = 0;
+    long id = 0;
 
     @ColumnInfo(name = "text")
     String text = "";
@@ -28,12 +31,12 @@ public class OcrItem implements Serializable {
         this.image = image;
     }
 
-    public long getID() {
-        return ID;
+    public long getId() {
+        return id;
     }
 
-    public void setID(long ID) {
-        this.ID = ID;
+    public void setId(long ID) {
+        this.id = ID;
     }
 
 

@@ -7,6 +7,9 @@ import androidx.room.RoomDatabase;
 
 import com.example.simpleocr.Model.OcrItem;
 
+/**
+ * @author 30415
+ */
 @Database(entities = OcrItem.class, version = 1, exportSchema = false)
 public abstract class Room extends RoomDatabase {
     private static Room database;

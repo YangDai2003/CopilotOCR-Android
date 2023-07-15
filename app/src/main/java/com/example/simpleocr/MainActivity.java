@@ -30,6 +30,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +52,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author 30415
+ */
 @ExperimentalGetImage
 public class MainActivity extends AppCompatActivity {
     AppBarLayout appBarLayout;
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private int mPosition;
     ActivityResultLauncher<Intent> intentActivityResultLauncher1, intentActivityResultLauncher2;
     File parentFile;
-    private static final String lang = "jpn+kor+equ";
+    private static final String LANG = "jpn+kor+equ";
     private int engineNum = 0;
     ObjectAnimator objectAnimatorY1, objectAnimatorY2, objectAnimatorY3;
 
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(this, OcrActivity.class);
                 intent.putExtra("launch", "camera");
-                intent.putExtra("langs", lang);
+                intent.putExtra("langs", LANG);
                 intent.putExtra("engine", engineNum);
                 intentActivityResultLauncher1.launch(intent);
             }
@@ -103,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(this, OcrActivity.class);
                 intent.putExtra("launch", "album");
-                intent.putExtra("langs", lang);
+                intent.putExtra("langs", LANG);
                 intent.putExtra("engine", engineNum);
                 intentActivityResultLauncher1.launch(intent);
             }
@@ -131,7 +135,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (openCamera.getVisibility() != View.GONE) hideOptions();
+                if (openCamera.getVisibility() != View.GONE) {
+                    hideOptions();
+                }
             }
         });
     }
@@ -162,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         objectAnimatorY3 = ObjectAnimator.ofFloat(openScan, "translationX", 0f);
         objectAnimatorY3.setDuration(200);
         objectAnimatorY3.start();
-        new Handler().postDelayed(() -> {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             openCamera.setVisibility(View.GONE);
             openAlbum.setVisibility(View.GONE);
             openScan.setVisibility(View.GONE);
@@ -203,27 +209,27 @@ public class MainActivity extends AppCompatActivity {
 
         intentActivityResultLauncher1 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), res -> {
             if (res.getResultCode() == Activity.RESULT_OK) {
-                OcrItem new_item = null;
+                OcrItem newItem = null;
                 if (res.getData() != null) {
-                    new_item = (OcrItem) res.getData().getSerializableExtra("ocr_item");
+                    newItem = (OcrItem) res.getData().getSerializableExtra("ocr_item");
                 }
-                long id = room.dao().insert(new_item);
-                if (new_item != null) {
-                    new_item.setID(id);
+                long id = room.dao().insert(newItem);
+                if (newItem != null) {
+                    newItem.setId(id);
                 }
-                itemList.add(0, new_item);
+                itemList.add(0, newItem);
                 ocrListAdapter.notifyItemInserted(0);
             }
         });
 
         intentActivityResultLauncher2 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), res -> {
             if (res.getResultCode() == Activity.RESULT_OK) {
-                OcrItem new_item = null;
+                OcrItem newItem = null;
                 if (res.getData() != null) {
-                    new_item = (OcrItem) res.getData().getSerializableExtra("ocr_item");
+                    newItem = (OcrItem) res.getData().getSerializableExtra("ocr_item");
                 }
-                if (new_item != null) {
-                    room.dao().update(new_item);
+                if (newItem != null) {
+                    room.dao().update(newItem);
                 }
                 itemList.clear();
                 itemList.addAll(room.dao().getAll());
@@ -232,14 +238,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         getSupportFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
-            if (requestKey.equals("requestKey") && bundle != null) {
+            if ("requestKey".equals(requestKey)) {
                 if (bundle.getBoolean("clear", false)) {
                     SpinKitView process = findViewById(R.id.spin_kit);
                     process.setVisibility(View.VISIBLE);
                     room.clearAllTables();
                     File dir = getFilesDir();
                     deleteRecursive(dir);
-                    new Handler().postDelayed(() -> {
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         itemList = room.dao().getAll();
                         updateRecycler(itemList);
                         process.setVisibility(View.GONE);
@@ -277,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onRefresh() {//刷新
-        new Handler().postDelayed(() -> {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             itemList = room.dao().getAll();
             updateRecycler(itemList);
             refresh.setRefreshing(false);//刷新旋转动画停止
