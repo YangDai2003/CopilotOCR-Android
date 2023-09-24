@@ -1,6 +1,6 @@
 package com.example.simpleocr;
 
-import static com.example.simpleocr.FileUtils.FileSaveToInside;
+import static com.example.simpleocr.FileUtils.fileSaveToInside;
 import static com.example.simpleocr.FileUtils.toTurn;
 
 import android.annotation.SuppressLint;
@@ -149,12 +149,14 @@ public class CameraxActivity extends AppCompatActivity {
                 imageView.setOnClickListener(v -> {
                     if (camera.getCameraInfo().hasFlashUnit()) {
                         // Toggle the torch state
-                        if (camera.getCameraInfo().getTorchState().getValue() == TorchState.OFF) {
-                            camera.getCameraControl().enableTorch(true);
-                            imageView.setImageDrawable(getDrawable(R.drawable.baseline_flashlight_on_24));
-                        } else {
-                            camera.getCameraControl().enableTorch(false);
-                            imageView.setImageDrawable(getDrawable(R.drawable.baseline_flashlight_off_24));
+                        if (null != camera.getCameraInfo().getTorchState().getValue()) {
+                            if (camera.getCameraInfo().getTorchState().getValue() == TorchState.OFF) {
+                                camera.getCameraControl().enableTorch(true);
+                                imageView.setImageDrawable(getDrawable(R.drawable.baseline_flashlight_on_24));
+                            } else {
+                                camera.getCameraControl().enableTorch(false);
+                                imageView.setImageDrawable(getDrawable(R.drawable.baseline_flashlight_off_24));
+                            }
                         }
                     }
                 });
@@ -162,8 +164,8 @@ public class CameraxActivity extends AppCompatActivity {
                 viewFinder.setOnTouchListener((view, event) -> {
                     try {
                         switch (event.getActionMasked()) {
-                            case MotionEvent.ACTION_DOWN:
-                                if (event.getPointerCount() == 1){
+                            case MotionEvent.ACTION_DOWN -> {
+                                if (event.getPointerCount() == 1) {
                                     focusView.setCenter((int) event.getX(), (int) event.getY());
                                     focusView.setVisibility(View.VISIBLE);
                                     FocusMeteringAction action = new FocusMeteringAction.Builder(
@@ -172,13 +174,12 @@ public class CameraxActivity extends AppCompatActivity {
                                     camera.getCameraControl().startFocusAndMetering(action);
                                     new Handler(Looper.getMainLooper()).postDelayed(() -> focusView.setVisibility(View.GONE), 1000);
                                 }
-                                // 单指点击对焦
-                                break;
-                            case MotionEvent.ACTION_POINTER_DOWN:
+                            }
+                            // 单指点击对焦
+                            case MotionEvent.ACTION_POINTER_DOWN ->
                                 // 双指缩放
-                                fingerSpacing = getFingerSpacing(event);
-                                break;
-                            case MotionEvent.ACTION_MOVE:
+                                    fingerSpacing = getFingerSpacing(event);
+                            case MotionEvent.ACTION_MOVE -> {
                                 if (event.getPointerCount() == 2) {
                                     float newFingerSpacing = getFingerSpacing(event);
                                     if (newFingerSpacing > fingerSpacing) {
@@ -188,12 +189,10 @@ public class CameraxActivity extends AppCompatActivity {
                                     }
                                     fingerSpacing = newFingerSpacing;
                                 }
-                                break;
-                            case MotionEvent.ACTION_POINTER_UP:
-                                fingerSpacing = 0;
-                                break;
-                            default:
-                                break;
+                            }
+                            case MotionEvent.ACTION_POINTER_UP -> fingerSpacing = 0;
+                            default -> {
+                            }
                         }
                     } catch (Exception e) {
                         Log.e("Error setting focus and exposure", "");
@@ -220,7 +219,7 @@ public class CameraxActivity extends AppCompatActivity {
                         for (Barcode barcode : barcodes) {
                             int type = barcode.getValueType();
                             switch (type) {
-                                case Barcode.TYPE_WIFI:
+                                case Barcode.TYPE_WIFI -> {
                                     String ssid = Objects.requireNonNull(barcode.getWifi()).getSsid();
                                     String password = barcode.getWifi().getPassword();
                                     if (ssid != null && !ssid.isEmpty()) {
@@ -229,8 +228,8 @@ public class CameraxActivity extends AppCompatActivity {
                                     if (password != null && !password.isEmpty()) {
                                         codeInfo.append(getString(R.string.password)).append(" ").append(password).append("\n");
                                     }
-                                    break;
-                                case Barcode.TYPE_URL:
+                                }
+                                case Barcode.TYPE_URL -> {
                                     String title = Objects.requireNonNull(barcode.getUrl()).getTitle();
                                     String uri = barcode.getUrl().getUrl();
                                     if (title != null && !title.isEmpty()) {
@@ -239,8 +238,8 @@ public class CameraxActivity extends AppCompatActivity {
                                     if (uri != null && !uri.isEmpty()) {
                                         codeInfo.append(getString(R.string.uri)).append(" ").append(uri).append("\n");
                                     }
-                                    break;
-                                case Barcode.TYPE_EMAIL:
+                                }
+                                case Barcode.TYPE_EMAIL -> {
                                     String address = Objects.requireNonNull(barcode.getEmail()).getAddress();
                                     String body = barcode.getEmail().getBody();
                                     if (address != null && !address.isEmpty()) {
@@ -249,17 +248,17 @@ public class CameraxActivity extends AppCompatActivity {
                                     if (body != null && !body.isEmpty()) {
                                         codeInfo.append(getString(R.string.body)).append(" ").append(body).append("\n");
                                     }
-                                    break;
-                                case Barcode.TYPE_PHONE:
+                                }
+                                case Barcode.TYPE_PHONE -> {
                                     String number = Objects.requireNonNull(barcode.getPhone()).getNumber();
                                     if (number != null && !number.isEmpty()) {
                                         codeInfo.append(getString(R.string.phone)).append(" ").append(number).append("\n");
                                     }
-                                    break;
-                                default:
+                                }
+                                default -> {
                                     String raw = barcode.getRawValue();
                                     codeInfo.append(raw).append("\n");
-                                    break;
+                                }
                             }
 
                         }
@@ -267,7 +266,7 @@ public class CameraxActivity extends AppCompatActivity {
                             success.bringToFront();
                             Bitmap res = toTurn(bitmap, imageProxy.getImageInfo().getRotationDegrees());
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
-                            savedUri = FileSaveToInside(CameraxActivity.this, formatter.format(LocalDateTime.now()), res);
+                            savedUri = fileSaveToInside(CameraxActivity.this, formatter.format(LocalDateTime.now()), res);
                             Intent intent = new Intent();
                             intent.putExtra("code", codeInfo.toString().trim());
                             intent.putExtra("uri", savedUri);

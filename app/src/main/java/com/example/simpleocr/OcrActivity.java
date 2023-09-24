@@ -1,13 +1,12 @@
 package com.example.simpleocr;
 
-import static com.example.simpleocr.FileUtils.FileSaveToInside;
+import static com.example.simpleocr.FileUtils.fileSaveToInside;
 import static com.example.simpleocr.FileUtils.readPictureDegree;
 import static com.example.simpleocr.FileUtils.toTurn;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.core.app.ActivityOptionsCompat;
@@ -31,6 +30,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.simpleocr.Model.OcrItem;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.material.color.DynamicColors;
@@ -46,7 +46,6 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -65,7 +64,7 @@ public class OcrActivity extends AppCompatActivity {
     private Bitmap bitmap;
     ActivityResultLauncher<Intent> galleryActivityResultLauncher, cameraActivityResultLauncher,
             editActivityResultLauncher, cameraxActivityResultLauncher;
-    Uri sourceUri, destinationUri;
+    Uri sourceUri;
     TessBaseAPI mTess;
     OcrItem ocrItem;
     private boolean oldItem;
@@ -175,11 +174,13 @@ public class OcrActivity extends AppCompatActivity {
 
         ocrItem = new OcrItem();
         oldItem = true;
-        if (null != getIntent().getSerializableExtra("old_ocr")) {
-            ocrItem = (OcrItem) getIntent().getSerializableExtra("old_ocr");
-            textView.setText(ocrItem.getText());
-            imageUri = ocrItem.getImage();
-            dateStr = ocrItem.getDate();
+        if (null != getIntent().getExtras() && getIntent().getExtras().containsKey("old_ocr")) {
+            ocrItem = (OcrItem) getIntent().getExtras().getSerializable("old_ocr");
+            if (ocrItem != null) {
+                textView.setText(ocrItem.getText());
+                imageUri = ocrItem.getImage();
+                dateStr = ocrItem.getDate();
+            }
             bitmap = BitmapFactory.decodeFile(imageUri);
             imageButton.setVisibility(View.VISIBLE);
             imageButton.setImageBitmap(bitmap);
@@ -286,29 +287,23 @@ public class OcrActivity extends AppCompatActivity {
         options.setStatusBarColor(SurfaceColors.SURFACE_2.getColor(this));
         options.setToolbarColor(SurfaceColors.SURFACE_2.getColor(this));
         options.setFreeStyleCropEnabled(true);
-        File newFile = new File(getCacheDir(), "temp.jpg");
-        try {
-            newFile.createNewFile();
-            UCrop.of(sourceUri, Uri.fromFile(newFile)).withOptions(options).start(this);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        File newFile = new File(getApplicationContext().getCacheDir(), "temp.jpeg");
+        UCrop.of(sourceUri, Uri.fromFile(newFile))
+                .withOptions(options)
+                .start(this, UCrop.REQUEST_CROP);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
-            if (data != null) {
-                destinationUri = UCrop.getOutput(data);
-                if (destinationUri == null) {
-                    return;
-                }
+            final Uri resultUri = UCrop.getOutput(data);
+            if (resultUri != null) {
                 imageButton.setVisibility(View.VISIBLE);
-                bitmap = toTurn(BitmapFactory.decodeFile(destinationUri.getPath()), readPictureDegree(destinationUri.getPath()));
+                bitmap = toTurn(BitmapFactory.decodeFile(resultUri.getPath()), readPictureDegree(resultUri.getPath()));
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
-                imageUri = FileSaveToInside(this, formatter.format(LocalDateTime.now()), bitmap);
-                imageButton.setImageBitmap(bitmap);
+                imageUri = fileSaveToInside(this, formatter.format(LocalDateTime.now()), bitmap);
+                Glide.with(this).load(imageUri).into(imageButton);
                 imageButton.setOnClickListener(v -> {
                     Intent intent = new Intent(this, PhotoActivity.class);
                     intent.putExtra("uri", imageUri);

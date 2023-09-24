@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".PhotoActivity">
 
-    <com.github.chrisbanes.photoview.PhotoView
+    <com.yangdai.imageviewpro.ImageViewPro
         android:id="@+id/photoView"
-        android:transitionName="testImg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.github.chrisbanes.photoview.PhotoView>
+        android:layout_height="match_parent"
+        android:transitionName="testImg" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

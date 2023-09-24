@@ -10,6 +10,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 /**
  * @author 30415
  */
@@ -43,12 +45,12 @@ public class ScanView extends View {
         float mFrameWidth = getResources().getDisplayMetrics().widthPixels / 1.5f;
         float mFrameHeight = getResources().getDisplayMetrics().widthPixels / 1.5f;
         float left = (getResources().getDisplayMetrics().widthPixels - mFrameWidth) / 2;
-        float top = (getResources().getDisplayMetrics().heightPixels - mFrameHeight) / 2 - dpToPx(100);
+        float top = (getResources().getDisplayMetrics().heightPixels - mFrameHeight) / 2 - dpToPx();
         mFrameRect = new RectF(left, top, left + mFrameWidth, top + mFrameHeight);
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
         float frameLeft = mFrameRect.left;
@@ -87,8 +89,8 @@ public class ScanView extends View {
         canvas.drawPath(path, mLinePaint);
     }
 
-    private int dpToPx(int dp) {
+    private int dpToPx() {
         float density = getResources().getDisplayMetrics().density;
-        return Math.round(dp * density);
+        return Math.round(100 * density);
     }
 }

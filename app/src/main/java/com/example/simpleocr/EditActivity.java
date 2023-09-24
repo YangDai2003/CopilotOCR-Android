@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
@@ -22,16 +21,6 @@ import java.util.Objects;
 public class EditActivity extends AppCompatActivity {
 
     TextInputEditText textInputEditText;
-    TextInputLayout textInputLayout;
-
-    @Override
-    public void finish() {
-        CharSequence text = textInputEditText.getText();
-        Intent intent = new Intent();
-        intent.putExtra("text", text);
-        setResult(Activity.RESULT_OK, intent);
-        super.finish();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +38,6 @@ public class EditActivity extends AppCompatActivity {
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
 
-        textInputLayout = findViewById(R.id.textInputLayout);
         textInputEditText = findViewById(R.id.editText);
 
         if (null != getIntent().getStringExtra("text")) {
@@ -66,6 +54,10 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.done) {
+            CharSequence text = textInputEditText.getText();
+            Intent intent = new Intent();
+            intent.putExtra("text", text);
+            setResult(Activity.RESULT_OK, intent);
             finish();
             return true;
         }

@@ -1,11 +1,16 @@
 package com.example.simpleocr;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
@@ -13,18 +18,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author 30415
+ * @noinspection ResultOfMethodCallIgnored
+ */
 public class FileUtils {
-    public static void deleteSingleFile(String filePath$Name) {
-        File file = new File(filePath$Name);
+    public static void deleteSingleFile(String filePath) {
+        File file = new File(filePath);
         // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
         if (file.exists() && file.isFile()) {
             file.delete();
         }
     }
 
-    public static String FileSaveToInside(Context context, String fileName, Bitmap bitmap) {
+    public static String fileSaveToInside(Context context, String fileName, Bitmap bitmap) {
         FileOutputStream fos = null;
         String path = null;
         try {
@@ -61,17 +72,11 @@ public class FileUtils {
             ExifInterface exifInterface = new ExifInterface(path);
             int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
             switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    degree = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    degree = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    degree = 270;
-                    break;
-                default:
-                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90 -> degree = 90;
+                case ExifInterface.ORIENTATION_ROTATE_180 -> degree = 180;
+                case ExifInterface.ORIENTATION_ROTATE_270 -> degree = 270;
+                default -> {
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,8 +101,8 @@ public class FileUtils {
         fileOrDirectory.delete();
     }
 
-    public static void deleteLangFile(String filePath$Name, File parentFile) {
-        File file = new File(parentFile, filePath$Name);
+    public static void deleteLangFile(String filePath, File parentFile) {
+        File file = new File(parentFile, filePath);
         // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
         if (file.exists() && file.isFile()) {
             file.delete();
@@ -116,6 +121,45 @@ public class FileUtils {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static List<String> checkPermissions(Activity activity) {
+        String[] permissions;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (Build.VERSION.SDK_INT >= 34) {
+                permissions = new String[]{
+                        android.Manifest.permission.READ_MEDIA_IMAGES,
+                        android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED,
+                        android.Manifest.permission.CAMERA
+                };
+            } else {
+                permissions = new String[]{
+                        android.Manifest.permission.READ_MEDIA_IMAGES,
+                        android.Manifest.permission.CAMERA
+                };
+            }
+        } else {
+            permissions = new String[]{
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.CAMERA
+            };
+        }
+
+        List<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
+        }
+        return permissionsToRequest;
+    }
+
+    public static void checkAndRequestPermissions(Activity activity) {
+        List<String> permissionsToRequest = checkPermissions(activity);
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(activity, permissionsToRequest.toArray(new String[0]), 1024);
         }
     }
 }

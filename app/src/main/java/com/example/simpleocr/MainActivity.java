@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
     File parentFile;
     private static final String LANG = "jpn+kor+equ";
     private int engineNum = 0;
-    ObjectAnimator objectAnimatorY1, objectAnimatorY2, objectAnimatorY3;
 
 
     private void initUi() {
@@ -146,28 +145,16 @@ public class MainActivity extends AppCompatActivity {
         openCamera.setVisibility(View.VISIBLE);
         openAlbum.setVisibility(View.VISIBLE);
         openScan.setVisibility(View.VISIBLE);
-        objectAnimatorY1 = ObjectAnimator.ofFloat(openCamera, "translationY", -getResources().getDisplayMetrics().density * 150);
-        objectAnimatorY1.setDuration(200);
-        objectAnimatorY1.start();
-        objectAnimatorY2 = ObjectAnimator.ofFloat(openAlbum, "translationY", -getResources().getDisplayMetrics().density * 75);
-        objectAnimatorY2.setDuration(200);
-        objectAnimatorY2.start();
-        objectAnimatorY3 = ObjectAnimator.ofFloat(openScan, "translationX", -getResources().getDisplayMetrics().density * 75);
-        objectAnimatorY3.setDuration(200);
-        objectAnimatorY3.start();
+        animateViewTranslationY(openCamera, -getResources().getDisplayMetrics().density * 150);
+        animateViewTranslationY(openAlbum, -getResources().getDisplayMetrics().density * 75);
+        animateViewTranslationX(openScan, -getResources().getDisplayMetrics().density * 75);
         button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_clear_24));
     }
 
-    private void hideOptions(){
-        objectAnimatorY1 = ObjectAnimator.ofFloat(openCamera, "translationY", 0f);
-        objectAnimatorY1.setDuration(200);
-        objectAnimatorY1.start();
-        objectAnimatorY2 = ObjectAnimator.ofFloat(openAlbum, "translationY", 0f);
-        objectAnimatorY2.setDuration(200);
-        objectAnimatorY2.start();
-        objectAnimatorY3 = ObjectAnimator.ofFloat(openScan, "translationX", 0f);
-        objectAnimatorY3.setDuration(200);
-        objectAnimatorY3.start();
+    private void hideOptions() {
+        animateViewTranslationY(openCamera, 0f);
+        animateViewTranslationY(openAlbum, 0f);
+        animateViewTranslationX(openScan, 0f);
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             openCamera.setVisibility(View.GONE);
             openAlbum.setVisibility(View.GONE);
@@ -176,6 +163,17 @@ public class MainActivity extends AppCompatActivity {
         button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_add_24));
     }
 
+    private void animateViewTranslationY(View view, float translationY) {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationY", translationY);
+        animator.setDuration(200);
+        animator.start();
+    }
+
+    private void animateViewTranslationX(View view, float translationX) {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX", translationX);
+        animator.setDuration(200);
+        animator.start();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,22 +181,7 @@ public class MainActivity extends AppCompatActivity {
         DynamicColors.applyToActivityIfAvailable(this);
         setContentView(R.layout.activity_main);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                // 没有获得授权，申请授权
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, getString(R.string.ask), Toast.LENGTH_LONG).show();
-                } else {
-                    // 不需要解释为何需要该权限，直接请求授权
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                }
-            }
-        }
+        FileUtils.checkAndRequestPermissions(this);
 
         initUi();
 
@@ -284,7 +267,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onRefresh() {//刷新
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            itemList = room.dao().getAll();
+            itemList.clear();
+            itemList.addAll(room.dao().getAll());
             updateRecycler(itemList);
             refresh.setRefreshing(false);//刷新旋转动画停止
         }, 1000);
@@ -303,17 +287,18 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(ocrListAdapter);
     }
 
-    private final ItemClick itemClick = new ItemClick() {
+    final ItemClick itemClick = new ItemClick() {
         @Override
         public void onClick(OcrItem ocrItem, int position, View imageview) {
             mPosition = position;
             Intent intent = new Intent(MainActivity.this, OcrActivity.class);
             intent.putExtra("old_ocr", ocrItem);
-            intentActivityResultLauncher2.launch(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, imageview, "testImg"));
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, imageview, "testImg");
+            intentActivityResultLauncher2.launch(intent, optionsCompat);
         }
     };
 
-    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+    final ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
         @Override
         public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
             int swiped = ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT;
@@ -378,5 +363,18 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1024) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, getString(R.string.ask), Toast.LENGTH_LONG).show();
+                    break;
+                }
+            }
+        }
     }
 }

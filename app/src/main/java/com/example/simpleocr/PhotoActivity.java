@@ -2,17 +2,17 @@ package com.example.simpleocr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.net.Uri;
 import android.os.Bundle;
 
-import com.github.chrisbanes.photoview.PhotoView;
+import com.bumptech.glide.Glide;
 import com.google.android.material.color.DynamicColors;
+import com.yangdai.imageviewpro.ImageViewPro;
 
 /**
  * @author 30415
  */
 public class PhotoActivity extends AppCompatActivity {
-    PhotoView photoView;
+    ImageViewPro photoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class PhotoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo);
 
         photoView = findViewById(R.id.photoView);
+        Glide.with(this).load(getIntent().getStringExtra("uri")).into(photoView);
         photoView.setOnClickListener(v -> this.finishAfterTransition());
-        photoView.setImageURI(Uri.parse(getIntent().getStringExtra("uri")));
     }
 }

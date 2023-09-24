@@ -8,17 +8,13 @@
     <string name="cancel" tools:ignore="ButtonCase">Cancel</string>
     <string name="copied">Copied</string>
     <string name="processing...">Processing…</string>
-    <string name="settings">Settings</string>
-    <string name="choose">Select the languages:</string>
     <string name="confirm">Confirm</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="sure">Are you sure you want to delete?</string>
     <string name="edit">Edit</string>
-    <string name="about">About</string>
     <string name="source">Open Source Licenses</string>
     <string name="content">Features:\n 1) Multi-engine offline image OCR, fast and accurate. Neural Network Engine 1 supports automatic recognition of nearly 100 languages such as Chinese, English, German, Spanish, etc. If you need to recognize Japanese and Korean, please use Neural Network Engine 2\n 2) The history of scanned images, slide to delete\n 3) Edit, copy and share scanned text\n 4) Automatically switch light and dark modes according to device, support Chinese, English and German three application languages\n 5) Material Design 3, with smooth and intuitive animation, and adapted to new features such as predictive return gestures\n 6) Quickly scan all types of barcodes and QR codes</string>
-    <string name="close">Close</string>
     <string name="share">Share</string>
     <string name="shareApp">Share this App</string>
     <string name="ask">Please allow access permission first!</string>

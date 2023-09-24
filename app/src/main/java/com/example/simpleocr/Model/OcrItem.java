@@ -35,8 +35,8 @@ public class OcrItem implements Serializable {
         return id;
     }
 
-    public void setId(long ID) {
-        this.id = ID;
+    public void setId(long id) {
+        this.id = id;
     }
 
 

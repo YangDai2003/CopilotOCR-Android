@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 /**
  * @author 30415
  */
@@ -44,7 +46,7 @@ public class FocusView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         int radius = 100;
         canvas.drawCircle(x, y, radius, paint);

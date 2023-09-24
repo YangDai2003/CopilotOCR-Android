@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/frame"
         style="@style/Widget.Material3.BottomSheet.DragHandle"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,7 +17,6 @@
 
             <!-- Drag handle for accessibility -->
             <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-                android:id="@+id/drag_handle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

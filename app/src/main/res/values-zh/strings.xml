@@ -9,17 +9,13 @@
     <string name="app_name">OCR 助手</string>
     <string name="copied">已复制</string>
     <string name="processing...">处理中…</string>
-    <string name="settings">设置</string>
-    <string name="choose">选择语言:</string>
     <string name="confirm">确定</string>
     <string name="save">保存</string>
     <string name="delete">删除</string>
     <string name="sure">确定要删除吗?</string>
     <string name="edit">编辑</string>
-    <string name="about">关于</string>
     <string name="source">开源许可证</string>
     <string name="content">功能:\n 1) 多引擎离线图片OCR，快速准确。神经网络引擎1支持汉语，英语，德语，西班牙语等近100种语言自动识别，如需识别日语和韩语请使用神经网络引擎2\n 2) 扫描图像的历史记录，滑动可删除\n 3) 编辑，复制和分享扫描的文本\n 4) 根据设备自动切换浅色和深色模式，支持中文，英语和德语三种应用语言\n 5) Material Design3 视觉风格，拥有流畅的且符合直觉的动画，适配了预测性返回手势等新特性\n 6) 快速扫描所有类型的条形码和二维码</string>
-    <string name="close">关闭</string>
     <string name="share">分享</string>
     <string name="shareApp">分享此应用</string>
     <string name="ask">请先允许访问许可！</string>
