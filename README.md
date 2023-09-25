@@ -18,7 +18,6 @@
 
 ## 📖 特点 Features
 
-* 轻量化 Lightweight (<5MB),
 * 无不必要的权限 No unnecessary permissions required,
 * 材料主题3 Material Design 3,
 * 历史记录 History,
