@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.material.color.DynamicColors;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -25,7 +24,6 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DynamicColors.applyToActivityIfAvailable(this);
         getWindow().setStatusBarColor(SurfaceColors.SURFACE_2.getColor(this));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         setContentView(R.layout.activity_edit);

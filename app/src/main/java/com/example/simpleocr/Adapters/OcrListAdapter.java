@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -15,17 +16,14 @@ import com.example.simpleocr.Model.OcrItem;
 import com.example.simpleocr.R;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.util.List;
-
 /**
  * @author 30415
  */
-public class OcrListAdapter extends RecyclerView.Adapter<OcrListAdapter.ItemViewHolder> {
-    private final List<OcrItem> list;
+public class OcrListAdapter extends ListAdapter<OcrItem, OcrListAdapter.ItemViewHolder> {
     final ItemClick itemClick;
 
-    public OcrListAdapter(List<OcrItem> list, ItemClick itemClick) {
-        this.list = list;
+    public OcrListAdapter(ItemClick itemClick) {
+        super(new DiffCallback());
         this.itemClick = itemClick;
     }
 
@@ -48,7 +46,7 @@ public class OcrListAdapter extends RecyclerView.Adapter<OcrListAdapter.ItemView
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        OcrItem ocrItem = list.get(holder.getAdapterPosition());
+        OcrItem ocrItem = getItem(position);
         holder.textViewText.setText(ocrItem.getText());
         holder.textViewDate.setText(ocrItem.getDate());
         String image = ocrItem.getImage();
@@ -59,13 +57,7 @@ public class OcrListAdapter extends RecyclerView.Adapter<OcrListAdapter.ItemView
                 itemClick.onClick(ocrItem, holder.getAdapterPosition(), holder.imageView));
     }
 
-
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
-
-    static class ItemViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
         final TextView textViewText;
         final TextView textViewDate;
         final ShapeableImageView imageView;

@@ -25,7 +25,7 @@
     <string name="engineOptions1">Neural Netzwerk Engine 1 (Empfohlen)</string>
     <string name="engineOptions2">Neural Netzwerk Engine 2</string>
     <string name="scan">Scannen</string>
-    <string name="nothing">Ki kann nichts finden.</string>
+    <string name="nothing">Kopilot erkennt keine Wörter oder Symbole.</string>
     <string name="ssid">SSID:</string>
     <string name="password">Passwort:</string>
     <string name="title">Titel:</string>

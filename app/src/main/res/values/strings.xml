@@ -24,7 +24,7 @@
     <string name="engineOptions1">Neural Network Engine 1 (Recommended)</string>
     <string name="engineOptions2">Neural Network Engine 2</string>
     <string name="scan">Scan</string>
-    <string name="nothing">Ai could not find anything.</string>
+    <string name="nothing">No words or symbols are recognized by copilot.</string>
     <string name="ssid">SSID:</string>
     <string name="password">Password:</string>
     <string name="title">Title:</string>

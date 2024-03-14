@@ -25,7 +25,7 @@
     <string name="engineOptions1">神经网络引擎 1 (推荐)</string>
     <string name="engineOptions2">神经网络引擎 2</string>
     <string name="scan">扫描</string>
-    <string name="nothing">助手什么也没找到。</string>
+    <string name="nothing">助手什么也没有识别到。</string>
     <string name="ssid">服务集标识:</string>
     <string name="password">密钥:</string>
     <string name="title">标题:</string>

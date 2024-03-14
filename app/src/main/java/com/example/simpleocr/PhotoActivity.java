@@ -1,11 +1,11 @@
 package com.example.simpleocr;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.color.DynamicColors;
 import com.yangdai.imageviewpro.ImageViewPro;
 
 /**
@@ -16,8 +16,8 @@ public class PhotoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
-        DynamicColors.applyToActivityIfAvailable(this);
         setContentView(R.layout.activity_photo);
 
         photoView = findViewById(R.id.photoView);

@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.simpleocr.Model.OcrItem;
 import com.github.ybq.android.spinkit.SpinKitView;
-import com.google.android.material.color.DynamicColors;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
@@ -149,7 +148,6 @@ public class OcrActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DynamicColors.applyToActivityIfAvailable(this);
         getWindow().setStatusBarColor(SurfaceColors.SURFACE_2.getColor(this));
         setContentView(R.layout.activity_ocr);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

@@ -5,6 +5,7 @@ import static com.example.simpleocr.FileUtils.deleteLangFile;
 import static com.example.simpleocr.FileUtils.deleteRecursive;
 import static com.example.simpleocr.FileUtils.deleteSingleFile;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -43,7 +44,6 @@ import com.example.simpleocr.Model.OcrItem;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.color.DynamicColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.shape.MaterialShapeDrawable;
@@ -177,18 +177,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
-        DynamicColors.applyToActivityIfAvailable(this);
         setContentView(R.layout.activity_main);
 
         FileUtils.checkAndRequestPermissions(this);
 
         initUi();
+        initRecyclerView();
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
         room = Room.getInstance(this);
         itemList = room.dao().getAll();
-        updateRecycler(itemList);
+        updateData(itemList);
 
         intentActivityResultLauncher1 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), res -> {
             if (res.getResultCode() == Activity.RESULT_OK) {
@@ -230,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                     deleteRecursive(dir);
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         itemList = room.dao().getAll();
-                        updateRecycler(itemList);
+                        updateData(itemList);
                         process.setVisibility(View.GONE);
                     }, 2000);
                 }
@@ -269,12 +270,16 @@ public class MainActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             itemList.clear();
             itemList.addAll(room.dao().getAll());
-            updateRecycler(itemList);
+            updateData(itemList);
             refresh.setRefreshing(false);//刷新旋转动画停止
         }, 1000);
     }
 
-    private void updateRecycler(List<OcrItem> ocrItemList) {
+    private void updateData(List<OcrItem> ocrItemList) {
+        ocrListAdapter.submitList(ocrItemList);
+    }
+
+    private void initRecyclerView(){
         recyclerView.setHasFixedSize(true);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -283,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
             recyclerView.setLayoutManager(gridLayoutManager);
         }
-        ocrListAdapter = new OcrListAdapter(ocrItemList, itemClick);
+        ocrListAdapter = new OcrListAdapter(itemClick);
         recyclerView.setAdapter(ocrListAdapter);
     }
 
