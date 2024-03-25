@@ -1,3 +1,17 @@
+# Project Deprecated
+
+This project is no longer maintained.
+
+Please note that there will be no further updates or bug fixes.
+
+The new project called [Open Note](https://github.com/YangDai2003/OpenNote-Compose) will serve as a replacement for this project.
+
+"Open Note" offers enhanced features and ongoing support.
+
+Thank you for your support and understanding.
+
+---
+
 <div align="center">
 
 # OCR 助手 
